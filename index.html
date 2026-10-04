@@ -175,6 +175,71 @@ draw();if(location.hash)openTool(location.hash.slice(1));
 <script>
 /* ELIAS add-on: assistant, EN/FR/AR, file converters. Set ENDPOINT below to turn on Claude (never put an API key here). */
 (() => {
+const CFG = { ENDPOINT: '', RTL_PAGE: true };   // RTL_PAGE:true also flips the whole page to right-to-leftze photo jpg png webp smaller',d:'Shrink photos to JPEG or WebP with a quality slider.',r:e=>{
+ e.innerHTML=`<input id=f type=file accept="image/*"><div class=row><span>Quality <b id=l>70</b>%</span><input id=n type=range min=10 max=95 value=70><select id=t><option value=image/jpeg>JPEG<option value=image/webp>WebP</select></div><div class=big id=o>Choose an image.</div><a class=btn id=d hidden>Download</a><p class=st></p>`;
+ e.oninput=async()=>{const f=q(e,'#f').files[0];q(e,'#l').textContent=q(e,'#n').value;if(!f)return;
+  try{const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;c.getContext('2d').drawImage(b,0,0);const t=q(e,'#t').value;
+  c.toBlob(bl=>{const d=q(e,'#d');d.href=URL.createObjectURL(bl);d.download='compressed.'+(t.endsWith('webp')?'webp':'jpg');d.hidden=false;q(e,'#o').textContent=`${(f.size/1024).toFixed(0)} KB → ${(bl.size/1024).toFixed(0)} KB (${Math.round(100-bl.size/f.size*100)}% smaller)`},t,q(e,'#n').value/100)}
+  catch(x){st(e,'This file is not a supported image.',1)}}}},
+{id:'json',n:'JSON formatter',c:'Developer',g:'{ }',k:'json validate minify beautify pretty',d:'Format, minify and validate JSON with clear error messages.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Paste JSON here"></textarea><div class=row><button class=btn data-a=f>Format</button><button class="btn g" data-a=m>Minify</button></div><textarea id=o readonly></textarea><p class=st></p>`;
+ e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;try{q(e,'#o').value=JSON.stringify(JSON.parse(q(e,'#i').value),null,a=='f'?2:0);st(e,'Valid JSON')}catch(x){st(e,x.message,1)}}}},
+{id:'b64',n:'Base64 encoder',c:'Developer',g:'64',k:'base64 encode decode text',d:'Encode text to Base64 or decode it back, with full Unicode support.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Text or Base64"></textarea><div class=row><button class=btn data-a=e>Encode</button><button class="btn g" data-a=d>Decode</button></div><textarea id=o readonly></textarea><p class=st></p>`;
+ e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;const v=q(e,'#i').value;try{q(e,'#o').value=a=='e'?btoa(String.fromCharCode(...new TextEncoder().encode(v))):new TextDecoder().decode(Uint8Array.from(atob(v.trim()),c=>c.charCodeAt(0)));st(e,'Done')}catch(x){st(e,'This is not valid Base64.',1)}}}},
+{id:'qr',n:'QR code maker',c:'Developer',g:'QR',k:'qr code link generator',d:'Turn any link or text into a QR code you can save.',r:e=>{
+ e.innerHTML=`<input type=text id=i value="https://codebind20.github.io/ilies-tools/" aria-label="Text or link"><div id=o style="background:#fff;padding:10px;width:fit-content;border-radius:6px"></div><p class=st>Right-click or long-press the code to save it.</p>`;
+ const go=async()=>{try{if(!window.QRCode)await load('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');const o=q(e,'#o');o.innerHTML='';new QRCode(o,{text:q(e,'#i').value||' ',width:220,height:220,colorDark:'#0A1030',colorLight:'#ffffff'})}catch(x){st(e,'Could not load the QR library. Check your connection.',1)}};e.oninput=go;go()}},
+{id:'pass',n:'Password generator',c:'Security',g:'***',k:'password random secure strong',d:'Create strong random passwords. Generated locally with your browser\'s crypto.',o:'#o',r:e=>{
+ e.innerHTML=`<div class=big id=o></div><div class=row><span>Length <b id=l></b></span><input id=n type=range min=8 max=64 value=20></div><div class=row><label><input type=checkbox id=u checked> Uppercase</label><label><input type=checkbox id=w checked> Numbers</label><label><input type=checkbox id=y checked> Symbols</label></div><button class=btn id=g>Generate again</button><p class=st></p>`;
+ const go=()=>{let p='abcdefghijklmnopqrstuvwxyz';if(q(e,'#u').checked)p+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(q(e,'#w').checked)p+='0123456789';if(q(e,'#y').checked)p+='!@#$%^&*()-_=+[]{};:,.?';
+  const n=+q(e,'#n').value,a=new Uint32Array(n);crypto.getRandomValues(a);q(e,'#o').textContent=[...a].map(x=>p[x%p.length]).join('');q(e,'#l').textContent=n;const b=Math.round(n*Math.log2(p.length));st(e,`${b} bits of entropy: ${b<60?'weak':b<90?'good':'strong'}`)};
+ e.oninput=go;q(e,'#g').onclick=go;go()}},
+{id:'hash',n:'Hash generator',c:'Security',g:'#',k:'sha checksum digest sha256 hash',d:'SHA-1, SHA-256 and SHA-512 hashes of any text.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Type or paste text"></textarea><select id=a><option>SHA-256<option>SHA-1<option>SHA-512</select><div class=big id=o></div><p class=st></p>`;
+ const go=async()=>{const h=await crypto.subtle.digest(q(e,'#a').value,new TextEncoder().encode(q(e,'#i').value));q(e,'#o').textContent=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('')};e.oninput=go;go()}},
+{id:'units',n:'Unit converter',c:'Calculate',g:'⇄',k:'convert length weight temperature km miles kg lb celsius fahrenheit',d:'Convert length, weight and temperature instantly.',o:'#o',r:e=>{
+ e.innerHTML=`<select id=c>${Object.keys(U).map(c=>`<option>${c}`).join('')}</select><div class=row><input id=v type=number value=1 step=any><select id=f></select><select id=t></select></div><div class=big id=o></div><p class=st></p>`;
+ const go=()=>{const c=q(e,'#c').value,v=+q(e,'#v').value,f=q(e,'#f').value,t=q(e,'#t').value;let r;
+  if(c=='Temperature'){const k=f=='°C'?v+273.15:f=='°F'?(v-32)*5/9+273.15:v;r=t=='°C'?k-273.15:t=='°F'?(k-273.15)*9/5+32:k}else r=v*U[c][f]/U[c][t];q(e,'#o').textContent=+r.toPrecision(10)+' '+t};
+ const fill=()=>{const u=Object.keys(U[q(e,'#c').value]).map(x=>`<option>${x}`).join('');q(e,'#f').innerHTML=q(e,'#t').innerHTML=u;q(e,'#t').selectedIndex=1;go()};
+ e.oninput=go;q(e,'#c').onchange=fill;fill()}},
+{id:'calc',n:'Percentage and loan calculator',c:'Calculate',g:'%',k:'percent percentage loan payment interest mortgage calculator',d:'Work out percentages and monthly loan payments.',o:'#o',r:e=>{
+ e.innerHTML=`<b>Percentage</b><div class=row><input id=p type=number value=15 step=any><span>% of</span><input id=b type=number value=240 step=any></div><div class=big id=o1></div><b>Loan payment</b><div class=row><input id=a type=number value=20000 aria-label=Amount><input id=r type=number value=7.5 step=any aria-label="Rate %"><input id=y type=number value=5 aria-label=Years></div><div class=big id=o></div><p class=st>Fields: amount, yearly rate %, years.</p>`;
+ const go=()=>{const v=s=>+q(e,s).value;q(e,'#o1').textContent=+(v('#p')*v('#b')/100).toPrecision(10);const n=v('#y')*12,i=v('#r')/1200,a=v('#a'),m=i?a*i/(1-Math.pow(1+i,-n)):a/n;
+  q(e,'#o').textContent=isFinite(m)?`${m.toFixed(2)} per month · ${(m*n-a).toFixed(2)} total interest`:'Enter amount, rate and years.'};e.oninput=go;go()}},
+{id:'words',n:'Word counter',c:'Text',g:'Aa',k:'words characters count reading time text',d:'Count words, characters and sentences, and estimate reading time.',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Paste your text"></textarea><div class=big id=o></div><p class=st></p>`;
+ const go=()=>{const v=q(e,'#i').value,t=v.trim(),w=t?t.split(/\s+/).length:0;q(e,'#o').textContent=`${w} words · ${v.length} characters · ${t?t.split(/[.!?]+(\s|$)/).filter(s=>s&&s.trim()).length:0} sentences · ${w?Math.max(1,Math.round(w/220)):0} min read`};e.oninput=go;go()}}
+];
+const cats=['All',...new Set(T.map(t=>t.c))];let cat='All';
+const dlg=$('#dlg'),tp=$('#tp');
+
+function match(t,s){s=s.toLowerCase().trim();return !s||s.split(/\s+/).every(w=>(t.n+' '+t.d+' '+t.k+' '+t.c).toLowerCase().includes(w))}
+function draw(){const s=$('#sq').value,list=T.filter(t=>(cat=='All'||t.c==cat)&&match(t,s));
+ $('#grid').innerHTML=list.map(t=>`<button class=t data-id=${t.id}><span class=gl>${t.g}</span><b>${t.n}</b><span>${t.d}</span></button>`).join('');
+ $('#grid').hidden=!list.length;const n=$('#none');n.hidden=!!list.length;n.innerHTML=`No tool matches "<span id=nq></span>". `;$('#nq').textContent=s;
+ const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>window.EliasAddon&&EliasAddon.open(true);n.append(b);
+ $('#tabs').innerHTML=cats.map(c=>`<button aria-pressed=${c==cat} data-c="${c}">${c}</button>`).join('');return list}
+function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textContent=t.n;tp.onclick=tp.oninput=null;tp.innerHTML='';t.r(tp);
+ if(t.o){const b=document.createElement('button');b.className='btn g';b.textContent='Copy result';b.onclick=()=>{const x=q(tp,t.o);navigator.clipboard.writeText(x.value??x.textContent);st(tp,'Copied to clipboard')};q(tp,'.st').before(b)}
+ if(!dlg.open)dlg.showModal();history.replaceState(null,'','#'+id)}
+$('#grid').onclick=e=>{const b=e.target.closest('.t');if(b)openTool(b.dataset.id)};
+$('#tabs').onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
+$('#sq').oninput=draw;
+$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&window.EliasAddon&&EliasAddon.open(true)}};
+$('#x').onclick=()=>dlg.close();dlg.onclose=()=>history.replaceState(null,'',location.pathname);
+dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.key=='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&k=='k')){e.preventDefault();dlg.close();$('#sq').focus()}});
+$('#hero').onpointermove=e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',e.clientX-r.left+'px');e.currentTarget.style.setProperty('--my',e.clientY-r.top+'px')};
+$('#meta').textContent=`${T.length} tools · 0 uploads · works offline once loaded`;
+
+$('#askTop').onclick=()=>window.EliasAddon&&EliasAddon.open(true);
+draw();if(location.hash)openTool(location.hash.slice(1));
+</script>
+<script>
+/* ELIAS add-on: assistant, EN/FR/AR, file converters. Set ENDPOINT below to turn on Claude (never put an API key here). */
+(() => {
 const CFG = { ENDPOINT: '', RTL_PAGE: true };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
 
 /* ---------- Translations of YOUR existing page text (exact-match). Add your own tool names here. ---------- */
