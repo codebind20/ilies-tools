@@ -69,6 +69,7 @@ input[type=range]{flex:1;accent-color:var(--y)}
 #cf{display:flex;gap:8px;padding:12px;border-top:1px solid var(--ln)}
 #cf input{flex:1;background:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:10px;min-width:0}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+[dir=rtl] .t,[dir=rtl] .hero,[dir=rtl] .trust,[dir=rtl] footer{text-align:right}[dir=rtl] .cmd kbd{order:-1}
 </style>
 </head>
 <body>
@@ -90,27 +91,13 @@ input[type=range]{flex:1;accent-color:var(--y)}
 <section class="trust">
   <div><h2>Private by design</h2><p>Files are processed on your device and never uploaded. Close the tab and everything is gone.</p></div>
   <div><h2>Fast, no sign-up</h2><p>Open a tool and use it. No account, no watermark, no limits.</p></div>
-  <div><h2>Assistant included</h2><p>Describe what you want to do and the assistant opens the right tool and explains the result.</p></div>
+  <div><h2>Assistant included</h2><p>Describe what you want to do and the assistant points you to the right tool.</p></div>
 </section>
 <footer>ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi</footer>
 
 <dialog id="dlg"><div class="dh"><h2 id="dt"></h2><button class="btn g" id="x">Close</button></div><div id="tp"></div></dialog>
 
-<button class="btn" id="fab" aria-expanded="false" aria-controls="ch">Ask AI</button>
-<aside id="ch" aria-label="Assistant">
-  <header><div><b>Assistant</b><small id="mode"></small></div><button class="btn g" id="cx" aria-label="Close assistant">✕</button></header>
-  <div id="ms" aria-live="polite"></div>
-  <div class="chips" id="chips"></div>
-  <form id="cf"><input id="ci" placeholder="What do you want to do?" autocomplete="off" aria-label="Message"><button class="btn">Send</button></form>
-</aside>
-
 <script>
-/* ============ CLAUDE SETUP ============
-   Never put an Anthropic API key in this file. Deploy a tiny proxy (Cloudflare Worker, Vercel, Netlify)
-   that holds the key, calls https://api.anthropic.com/v1/messages with model "claude-sonnet-4-6",
-   and returns JSON {"text": "..."}. Paste its URL below. Empty = built-in offline helper. */
-const ENDPOINT='';
-/* ====================================== */
 const $=s=>document.querySelector(s),q=(e,s)=>e.querySelector(s);
 const st=(e,t,bad)=>{const p=q(e,'.st');p.textContent=t;p.className='st'+(bad?' bad':'')};
 const load=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.append(s)});
@@ -167,7 +154,7 @@ function match(t,s){s=s.toLowerCase().trim();return !s||s.split(/\s+/).every(w=>
 function draw(){const s=$('#sq').value,list=T.filter(t=>(cat=='All'||t.c==cat)&&match(t,s));
  $('#grid').innerHTML=list.map(t=>`<button class=t data-id=${t.id}><span class=gl>${t.g}</span><b>${t.n}</b><span>${t.d}</span></button>`).join('');
  $('#grid').hidden=!list.length;const n=$('#none');n.hidden=!!list.length;n.innerHTML=`No tool matches "<span id=nq></span>". `;$('#nq').textContent=s;
- const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>{chat(true);ask(s)};n.append(b);
+ const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>window.EliasAddon&&EliasAddon.open(true);n.append(b);
  $('#tabs').innerHTML=cats.map(c=>`<button aria-pressed=${c==cat} data-c="${c}">${c}</button>`).join('');return list}
 function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textContent=t.n;tp.onclick=tp.oninput=null;tp.innerHTML='';t.r(tp);
  if(t.o){const b=document.createElement('button');b.className='btn g';b.textContent='Copy result';b.onclick=()=>{const x=q(tp,t.o);navigator.clipboard.writeText(x.value??x.textContent);st(tp,'Copied to clipboard')};q(tp,'.st').before(b)}
@@ -175,25 +162,20 @@ function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textCont
 $('#grid').onclick=e=>{const b=e.target.closest('.t');if(b)openTool(b.dataset.id)};
 $('#tabs').onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
 $('#sq').oninput=draw;
-$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&(chat(true),ask($('#sq').value))}};
+$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&window.EliasAddon&&EliasAddon.open(true)}};
 $('#x').onclick=()=>dlg.close();dlg.onclose=()=>history.replaceState(null,'',location.pathname);
 dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.key=='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&k=='k')){e.preventDefault();dlg.close();$('#sq').focus()}});
 $('#hero').onpointermove=e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',e.clientX-r.left+'px');e.currentTarget.style.setProperty('--my',e.clientY-r.top+'px')};
 $('#meta').textContent=`${T.length} tools · 0 uploads · works offline once loaded`;
 
-/* ---------- Assistant ---------- */
-const SYS=`You are the assistant of ELIAS Tools, a free browser-based toolbox. All processing happens locally; never ask users to paste private data. Reply in the user's language, in 1 to 4 short sentences, plain text. Available tools (id: purpose): ${T.map(t=>t.id+': '+t.n+' - '+t.d).join(' | ')}. When a tool fits, end your reply with [[open:id]]. If nothing fits, say so and suggest the closest tool or explain the concept briefly.`;
-const hist=[];
-function chat(on){$('#ch').classList.toggle('on',on);$('#fab').setAttribute('aria-expanded',on);if(on){$('#ci').focus();if(!$('#ms').children.length)say('a',`Hi, I'm the ELIAS assistant. Tell me what you want to do and I'll open the right tool.`)}}
-function say(r,t){const d=document.createElement('div');d.className='m '+r;$('#ms').append(d);fill(d,t);return d}
-function fill(d,t){d.textContent=t.replace(/\[\[open:(\w+)\]\]/g,'').trim();[...t.matchAll(/\[\[open:(\w+)\]\]/g)].forEach(m=>{const x=T.find(k=>k.id==m[1]);if(x){const b=document.createElement('button');b.className='btn';b.textContent='Open '+x.n;b.onclick=()=>openTool(x.id);d.append(b)}});$('#ms').scrollTop=1e9}
-function local(s){const w=s.toLowerCase().split(/\W+/).filter(x=>x.length>2);const sc=T.map(t=>({t,s:w.filter(x=>(t.n+' '+t.d+' '+t.k).toLowerCase().includes(x)).length})).filter(x=>x.s).sort((a,b)=>b.s-a.s);
- return sc.length?`${sc[0].t.n} should do it: ${sc[0].t.d}${sc[1]?` You could also try ${sc[1].t.n}.`:''} [[open:${sc[0].t.id}]]`:`I couldn't match that to a tool. Try words like "merge PDF", "password", "JSON", "convert km to miles" or "QR code".`}
-async function ask(s){s=s.trim();if(!s)return;say('u',s);hist.push({role:'user',content:s});const d=say('a','Thinking…');let out=null;
- if(ENDPOINT){try{const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,messages:hist.slice(-10)})});const j=await r.json();out=j.text||(j.content||[]).map(c=>c.text||'').join('')}catch(e){}}
- out=out||local(s);hist.push({role:'assistant',content:out});d.textContent='';fill(d,out)}(() => {
-const CFG = { ENDPOINT: '', RTL_PAGE: false };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
+$('#askTop').onclick=()=>window.EliasAddon&&EliasAddon.open(true);
+draw();if(location.hash)openTool(location.hash.slice(1));
+</script>
+<script>
+/* ELIAS add-on: assistant, EN/FR/AR, file converters. Set ENDPOINT below to turn on Claude (never put an API key here). */
+(() => {
+const CFG = { ENDPOINT: '', RTL_PAGE: true };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
 
 /* ---------- Translations of YOUR existing page text (exact-match). Add your own tool names here. ---------- */
 const PAGE = [
@@ -212,6 +194,8 @@ const PAGE = [
  {en:'PDF tools',fr:'Outils PDF',ar:'أدوات PDF'},{en:'Image tools',fr:'Outils image',ar:'أدوات الصور'},{en:'Developer tools',fr:'Outils développeur',ar:'أدوات المطورين'},
  {en:'Security tools',fr:'Outils de sécurité',ar:'أدوات الأمان'},{en:'Calculators',fr:'Calculatrices',ar:'الحاسبات'},{en:'Converters',fr:'Convertisseurs',ar:'المحوّلات'}
 ];
+
+PAGE.push(...[{"en": "Ask the assistant", "fr": "Demander à l’assistant", "ar": "اسأل المساعد"}, {"en": "Find a tool: merge pdf, password, json…", "fr": "Trouver un outil : fusionner pdf, mot de passe, json…", "ar": "ابحث عن أداة: دمج pdf، كلمة مرور، json…"}, {"en": "10 tools · 0 uploads · works offline once loaded", "fr": "10 outils · 0 envoi · fonctionne hors ligne une fois chargé", "ar": "10 أدوات · 0 رفع · يعمل دون اتصال بعد التحميل"}, {"en": "ELIAS Tools", "fr": "ELIAS Tools", "ar": "ELIAS Tools"}, {"en": "E/", "fr": "E/", "ar": "E/"}, {"en": "All", "fr": "Tous", "ar": "الكل"}, {"en": "Files", "fr": "Fichiers", "ar": "الملفات"}, {"en": "Developer", "fr": "Développeur", "ar": "المطورين"}, {"en": "Security", "fr": "Sécurité", "ar": "الأمان"}, {"en": "Calculate", "fr": "Calcul", "ar": "الحساب"}, {"en": "Text", "fr": "Texte", "ar": "النص"}, {"en": "Combine several PDF files into one, in the order you choose.", "fr": "Combinez plusieurs fichiers PDF en un seul, dans l’ordre de votre choix.", "ar": "ادمج عدة ملفات PDF في ملف واحد بالترتيب الذي تختاره."}, {"en": "Image compressor", "fr": "Compresseur d’images", "ar": "ضاغط الصور"}, {"en": "Shrink photos to JPEG or WebP with a quality slider.", "fr": "Réduisez le poids des photos en JPEG ou WebP avec un curseur de qualité.", "ar": "قلّل حجم الصور بصيغة JPEG أو WebP مع شريط لضبط الجودة."}, {"en": "Format, minify and validate JSON with clear error messages.", "fr": "Formatez, minifiez et validez du JSON avec des messages d’erreur clairs.", "ar": "نسّق JSON وصغّره وتحقق منه مع رسائل خطأ واضحة."}, {"en": "Base64 encoder", "fr": "Encodeur Base64", "ar": "مشفّر Base64"}, {"en": "Encode text to Base64 or decode it back, with full Unicode support.", "fr": "Encodez du texte en Base64 ou décodez-le, avec prise en charge complète d’Unicode.", "ar": "حوّل النص إلى Base64 أو فك تشفيره، مع دعم كامل لـ Unicode."}, {"en": "QR code maker", "fr": "Créateur de QR code", "ar": "منشئ رمز QR"}, {"en": "Turn any link or text into a QR code you can save.", "fr": "Transformez un lien ou un texte en QR code à enregistrer.", "ar": "حوّل أي رابط أو نص إلى رمز QR يمكنك حفظه."}, {"en": "Create strong random passwords. Generated locally with your browser's crypto.", "fr": "Créez des mots de passe aléatoires robustes, générés localement par votre navigateur.", "ar": "أنشئ كلمات مرور عشوائية قوية، تُولَّد محلياً بواسطة متصفحك."}, {"en": "Hash generator", "fr": "Générateur de hash", "ar": "مولّد التجزئة"}, {"en": "SHA-1, SHA-256 and SHA-512 hashes of any text.", "fr": "Hash SHA-1, SHA-256 et SHA-512 de n’importe quel texte.", "ar": "تجزئة SHA-1 وSHA-256 وSHA-512 لأي نص."}, {"en": "Convert length, weight and temperature instantly.", "fr": "Convertissez instantanément longueur, poids et température.", "ar": "حوّل الطول والوزن ودرجة الحرارة فوراً."}, {"en": "Percentage and loan calculator", "fr": "Calculatrice de pourcentage et de prêt", "ar": "حاسبة النسبة المئوية والقروض"}, {"en": "Work out percentages and monthly loan payments.", "fr": "Calculez des pourcentages et des mensualités de prêt.", "ar": "احسب النسب المئوية وأقساط القروض الشهرية."}, {"en": "Count words, characters and sentences, and estimate reading time.", "fr": "Comptez les mots, caractères et phrases, et estimez le temps de lecture.", "ar": "احسب الكلمات والأحرف والجمل وقدّر وقت القراءة."}, {"en": "Private by design", "fr": "Confidentialité par conception", "ar": "خصوصية بالتصميم"}, {"en": "Files are processed on your device and never uploaded. Close the tab and everything is gone.", "fr": "Les fichiers sont traités sur votre appareil et jamais envoyés. Fermez l’onglet et tout disparaît.", "ar": "تتم معالجة الملفات على جهازك ولا يتم رفعها أبداً. أغلق التبويب ويختفي كل شيء."}, {"en": "Fast, no sign-up", "fr": "Rapide, sans inscription", "ar": "سريع وبلا تسجيل"}, {"en": "Open a tool and use it. No account, no watermark, no limits.", "fr": "Ouvrez un outil et utilisez-le. Pas de compte, pas de filigrane, pas de limites.", "ar": "افتح أداة واستخدمها. بلا حساب ولا علامة مائية ولا حدود."}, {"en": "Assistant included", "fr": "Assistant inclus", "ar": "المساعد مضمّن"}, {"en": "Describe what you want to do and the assistant points you to the right tool.", "fr": "Décrivez ce que vous voulez faire et l’assistant vous indique le bon outil.", "ar": "صف ما تريد فعله ويرشدك المساعد إلى الأداة المناسبة."}, {"en": "Close", "fr": "Fermer", "ar": "إغلاق"}, {"en": "Choose two or more PDFs, in the order you want them.", "fr": "Choisissez au moins deux PDF, dans l’ordre souhaité.", "ar": "اختر ملفَّي PDF أو أكثر بالترتيب الذي تريده."}, {"en": "Choose an image.", "fr": "Choisissez une image.", "ar": "اختر صورة."}, {"en": "Quality", "fr": "Qualité", "ar": "الجودة"}, {"en": "Format", "fr": "Formater", "ar": "تنسيق"}, {"en": "Minify", "fr": "Minifier", "ar": "تصغير"}, {"en": "Valid JSON", "fr": "JSON valide", "ar": "JSON صالح"}, {"en": "Encode", "fr": "Encoder", "ar": "تشفير"}, {"en": "Decode", "fr": "Décoder", "ar": "فك التشفير"}, {"en": "This is not valid Base64.", "fr": "Ce n’est pas du Base64 valide.", "ar": "هذا ليس Base64 صالحاً."}, {"en": "Done", "fr": "Terminé", "ar": "تم"}, {"en": "Right-click or long-press the code to save it.", "fr": "Clic droit ou appui long sur le code pour l’enregistrer.", "ar": "انقر بزر الفأرة الأيمن أو اضغط مطولاً على الرمز لحفظه."}, {"en": "Generate again", "fr": "Générer à nouveau", "ar": "إنشاء من جديد"}, {"en": "Length", "fr": "Longueur", "ar": "الطول"}, {"en": "Uppercase", "fr": "Majuscules", "ar": "أحرف كبيرة"}, {"en": "Numbers", "fr": "Chiffres", "ar": "أرقام"}, {"en": "Symbols", "fr": "Symboles", "ar": "رموز"}, {"en": "Weight", "fr": "Poids", "ar": "الوزن"}, {"en": "Temperature", "fr": "Température", "ar": "درجة الحرارة"}, {"en": "Percentage", "fr": "Pourcentage", "ar": "النسبة المئوية"}, {"en": "% of", "fr": "% de", "ar": "% من"}, {"en": "Loan payment", "fr": "Mensualité du prêt", "ar": "قسط القرض"}, {"en": "Fields: amount, yearly rate %, years.", "fr": "Champs : montant, taux annuel %, années.", "ar": "الحقول: المبلغ، المعدل السنوي %، السنوات."}, {"en": "Copied to clipboard", "fr": "Copié dans le presse-papiers", "ar": "تم النسخ إلى الحافظة"}, {"en": "Select at least two PDF files.", "fr": "Sélectionnez au moins deux fichiers PDF.", "ar": "اختر ملفَّي PDF على الأقل."}, {"en": "Paste JSON here", "fr": "Collez du JSON ici", "ar": "الصق JSON هنا"}, {"en": "Text or Base64", "fr": "Texte ou Base64", "ar": "نص أو Base64"}, {"en": "Type or paste text", "fr": "Saisissez ou collez du texte", "ar": "اكتب أو الصق نصاً"}, {"en": "Paste your text", "fr": "Collez votre texte", "ar": "الصق نصك"}]);
 
 /* ---------- Add-on interface texts ---------- */
 const L = {
@@ -315,7 +299,7 @@ const panel = h('div', { class: 'p', role: 'dialog' });
 const title = h('b'), mode = h('small'), lg = h('div', { class: 'lg' }), x = h('button', { class: 'btn g', onclick: () => open(false) }, '✕');
 const tb = h('div', { class: 'tb' }), body = h('div', { class: 'bd', 'aria-live': 'polite' });
 const inp = h('input', { autocomplete: 'off' }), send = h('button', { class: 'btn' }), form = h('form', {}, inp, send);
-title.append(mode); panel.append(h('div', { class: 'hd' }, h('b', {}, title, mode), lg, x), tb, body, form); root.append(fab, panel);
+panel.append(h('div', { class: 'hd' }, h('b', {}, title, mode), lg, x), tb, body, form); root.append(fab, panel);
 const hist = []; let tab = 'a', msgs = [];
 
 function open(on) { panel.classList.toggle('on', on); fab.setAttribute('aria-expanded', on); if (on && tab == 'a') inp.focus() }
@@ -323,7 +307,7 @@ fab.onclick = () => open(!panel.classList.contains('on'));
 
 function chrome() {
   const t = d(); panel.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  title.firstChild.textContent = t.title; mode.textContent = CFG.ENDPOINT ? t.m1 : t.m0;
+  title.textContent = t.title; mode.textContent = CFG.ENDPOINT ? t.m1 : t.m0;
   inp.placeholder = t.ph; send.textContent = t.send; x.setAttribute('aria-label', t.close);
   lg.replaceChildren(...['en', 'fr', 'ar'].map(k => h('button', { 'aria-pressed': String(k == lang), onclick: () => setLang(k) }, { en: 'EN', fr: 'FR', ar: 'عربي' }[k])));
   tb.replaceChildren(...[['a', t.tA], ['t', t.tT], ['c', t.tC]].map(([k, l]) => h('button', { 'aria-pressed': String(k == tab), onclick: () => { tab = k; chrome(); view() } }, l)));
@@ -334,14 +318,14 @@ function view() { body.replaceChildren(); tab == 'a' ? chatView() : tab == 't' ?
 
 /* ---------- Assistant ---------- */
 function say(r, t, btns = []) { const m = h('div', { class: 'm ' + r }, t); btns.forEach(b => m.append(b)); body.append(m); body.scrollTop = 1e9; return m }
-function chatView() { if (!msgs.length) msgs.push({ r: 'a', t: 'hi' }); msgs.forEach(m => say(m.r, m.k ? d()[m.k] : m.t, m.b || [])) }
-const pageItems = () => [...document.querySelectorAll('a,button,h1,h2,h3,h4,label,summary')].filter(e => e.offsetParent && e.textContent.trim().length > 1 && e.textContent.trim().length < 80);
+function chatView() { if (!msgs.length) msgs.push({ r: 'a', k: 'hi' }); msgs.forEach(m => say(m.r, m.k ? d()[m.k] : m.t, m.b || [])) }
+const pageItems = () => [...document.querySelectorAll('a,button,h1,h2,h3,h4,label,summary')].filter(e => e.offsetParent && e.textContent.trim().length > 1 && e.textContent.trim().length < 160);
 function flash(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); const o = el.style.outline; el.style.outline = '3px solid #ffd400'; setTimeout(() => el.style.outline = o, 2500) }
 function local(s) {
   if (/youtube|tiktok|download|télécharg|telecharg|تحميل|تنزيل/i.test(s)) return { k: 'note' };
   const w = s.toLowerCase().split(/[\s,.;:!?]+/).filter(v => v.length > 2); const seen = new Set(), hits = [];
   pageItems().forEach(e => { const t = e.textContent.trim().replace(/\s+/g, ' '); if (seen.has(t)) return; if (w.some(v => t.toLowerCase().includes(v))) { seen.add(t); hits.push([t, e]) } });
-  return hits.length ? { t: d().found, b: hits.slice(0, 3).map(([t, e]) => h('button', { class: 'btn', onclick: () => flash(e) }, d().show + ': ' + t)) } : { k: 'none' };
+  return hits.length ? { t: d().found, b: hits.slice(0, 3).map(([t, e]) => h('button', { class: 'btn', onclick: () => flash(e) }, d().show + ': ' + t.slice(0, 50))) } : { k: 'none' };
 }
 form.onsubmit = async ev => {
   ev.preventDefault(); const s = inp.value.trim(); if (!s) return; inp.value = '';
@@ -430,15 +414,9 @@ function convView() {
 }
 
 chrome(); view(); translatePage();
-window.EliasAddon = { setLang, addStrings: a => { PAGE.push(...a); translatePage() } };
+window.EliasAddon = { setLang, open, addStrings: a => { PAGE.push(...a); translatePage() } };
 })();
 
-$('#cf').onsubmit=e=>{e.preventDefault();const i=$('#ci');ask(i.value);i.value=''};
-$('#fab').onclick=()=>chat(!$('#ch').classList.contains('on'));$('#cx').onclick=()=>chat(false);$('#askTop').onclick=()=>chat(true);
-$('#mode').textContent=ENDPOINT?'Powered by Claude':'Offline helper. Add your Claude endpoint to enable full AI.';
-$('#chips').innerHTML=['Merge two PDFs','Make a strong password','Is my JSON valid?'].map(t=>`<button>${t}</button>`).join('');
-$('#chips').onclick=e=>{if(e.target.tagName=='BUTTON')ask(e.target.textContent)};
-draw();if(location.hash)openTool(location.hash.slice(1));
 </script>
 </body>
 </html>
