@@ -1,489 +1,262 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>ELIAS Tools | Free PDF, image, calculator and developer tools</title>
-<meta name="description" content="Free online tools: merge PDFs, compress images, calculators, JSON formatter, password generator, QR codes and converters. Fast and private, everything runs in your browser.">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0A1030">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>ELIAS Tools | 130+ free online tools</title>
+<meta name="description" content="Free online tools: text, developer, security, finance, health, math, converters and dates. Fast and private, everything runs in your browser.">
+<meta name="theme-color" content="#ffd400"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0A1030;--sf:#121A45;--ln:#2A367A;--tx:#EAF0FF;--mu:#9AA7D6;--y:#FFD400;--b:#5B7CFF;--pad:clamp(16px,5vw,64px)}
+:root{--y:#ffd400;--bg:#141414;--c:#232323;--m:#9a9a9a}
 *{box-sizing:border-box;margin:0}
-body{background:var(--ink);color:var(--tx);font:16px/1.55 'Space Grotesk',system-ui,sans-serif;min-height:100vh}
-button,input,select,textarea{font:inherit;color:inherit}
-[hidden]{display:none!important}
+body{background:var(--bg);color:#f3f3f3;font:15px/1.5 system-ui,sans-serif}
+header{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;gap:22px;align-items:center;padding:14px 4%;background:linear-gradient(#000d,#0000);transition:background .3s}
+header.s{background:var(--bg)}
+.logo{font:34px 'Bebas Neue',Impact,sans-serif;color:var(--y);letter-spacing:2px}
+nav{display:flex;gap:18px;overflow:auto;flex:1;scrollbar-width:none}
+nav a{color:#ddd;white-space:nowrap;cursor:pointer;font-size:14px}nav a:hover{color:var(--y)}
+#q{background:#000a;border:1px solid #666;color:#fff;padding:7px 12px;border-radius:4px;width:190px;font:inherit}
 :focus-visible{outline:2px solid var(--y);outline-offset:2px}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px var(--pad);position:sticky;top:0;z-index:5;background:rgba(10,16,48,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
-.logo{font-weight:700;font-size:20px;display:flex;gap:10px;align-items:center}
-.logo i{width:30px;height:30px;background:var(--y);color:var(--ink);display:grid;place-items:center;border-radius:6px;font:700 16px 'JetBrains Mono',monospace}
-.btn{background:var(--y);color:var(--ink);border:0;padding:10px 16px;border-radius:6px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.g{background:none;color:var(--tx);border:1px solid var(--ln)}
-.btn:hover{filter:brightness(1.1)}
-.hero{position:relative;padding:clamp(48px,9vw,110px) var(--pad) 56px;overflow:hidden;--mx:75%;--my:30%}
-.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(var(--ln) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,var(--ln) 1px,transparent 1px) 0 0/44px 44px;-webkit-mask:radial-gradient(380px circle at var(--mx) var(--my),#000,transparent);mask:radial-gradient(380px circle at var(--mx) var(--my),#000,transparent)}
-.hero>*{position:relative}
-h1{font-size:clamp(40px,7vw,88px);line-height:1;letter-spacing:-.035em;max-width:15ch}
-.sub{color:var(--mu);max-width:56ch;margin-top:20px;font-size:18px}
-.cmd{display:flex;align-items:center;gap:12px;margin-top:32px;max-width:660px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:5px 10px 5px 16px;box-shadow:0 0 0 0 rgba(255,212,0,.0);transition:box-shadow .2s,border-color .2s}
-.cmd:focus-within{border-color:var(--y);box-shadow:0 0 40px rgba(255,212,0,.18)}
-.cmd input{flex:1;background:none;border:0;outline:0;padding:12px 0;font-size:18px;min-width:0}
-kbd{border:1px solid var(--ln);border-radius:4px;padding:0 7px;color:var(--mu);font:12px 'JetBrains Mono',monospace}
-.meta{color:var(--mu);margin-top:16px;font-size:14px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;padding:8px var(--pad) 20px}
-.tabs button{background:none;border:1px solid var(--ln);border-radius:99px;padding:6px 15px;cursor:pointer;color:var(--mu)}
-.tabs [aria-pressed=true]{background:var(--tx);color:var(--ink);border-color:var(--tx)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--ln);border:1px solid var(--ln);margin:0 var(--pad)}
-.t{background:var(--ink);text-align:left;padding:22px;border:0;cursor:pointer;display:grid;gap:8px;align-content:start;min-height:170px}
-.t:hover{background:var(--sf)}
-.t b{font-size:18px}.t span{color:var(--mu);font-size:14px}
-.gl{font:600 15px 'JetBrains Mono',monospace;color:var(--y);border:1px solid var(--ln);width:44px;height:44px;display:grid;place-items:center;border-radius:6px;margin-bottom:6px;transition:.15s}
-.t:hover .gl{background:var(--y);color:var(--ink)}
-#none{padding:40px var(--pad);color:var(--mu)}
-.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding:72px var(--pad)}
-.trust p{color:var(--mu);font-size:15px}.trust h2{font-size:20px;margin-bottom:6px}
-footer{padding:28px var(--pad) 90px;border-top:1px solid var(--ln);color:var(--mu);font-size:14px}
-dialog{margin:auto;width:min(720px,94vw);max-height:90vh;overflow:auto;background:var(--sf);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:0}
-dialog::backdrop{background:rgba(5,8,30,.78);backdrop-filter:blur(4px)}
-.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--sf)}
-.dh h2{font-size:20px}
-#tp{padding:20px;display:grid;gap:14px}
-textarea,input[type=text],input[type=number],input[type=file],select{width:100%;background:var(--ink);border:1px solid var(--ln);border-radius:6px;padding:10px;font:14px 'JetBrains Mono',monospace}
-textarea{min-height:130px;resize:vertical}
-input[type=range]{flex:1;accent-color:var(--y)}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>input,.row>select{flex:1;min-width:90px;width:auto}
-.big{font:600 18px/1.4 'JetBrains Mono',monospace;word-break:break-all;background:var(--ink);padding:14px;border-radius:6px;border:1px solid var(--ln);min-height:50px}
-.st{color:var(--mu);font-size:14px;min-height:1.4em}.st.bad{color:#ff9b9b}
-#fab{position:fixed;right:16px;bottom:16px;z-index:9;box-shadow:0 8px 30px rgba(0,0,0,.4);padding:13px 18px;border-radius:99px}
-#ch{position:fixed;right:16px;bottom:72px;width:min(390px,calc(100vw - 32px));height:min(540px,72vh);background:var(--sf);border:1px solid var(--ln);border-radius:14px;display:none;flex-direction:column;z-index:9;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-#ch.on{display:flex}
-#ch header{position:static;padding:12px 14px;background:none;border-radius:14px 14px 0 0}
-#ch small{color:var(--mu);display:block;font-size:12px}
-#ms{flex:1;overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
-.m{padding:10px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap;font-size:15px}
-.m.u{background:var(--b);justify-self:end}.m.a{background:var(--ink);border:1px solid var(--ln)}
-.m .btn{margin-top:8px;padding:6px 12px;font-size:14px;display:block;width:fit-content}
-.chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 8px}
-.chips button{background:none;border:1px solid var(--ln);border-radius:99px;padding:4px 11px;font-size:13px;color:var(--mu);cursor:pointer}
-#cf{display:flex;gap:8px;padding:12px;border-top:1px solid var(--ln)}
-#cf input{flex:1;background:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:10px;min-width:0}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-[dir=rtl] .t,[dir=rtl] .hero,[dir=rtl] .trust,[dir=rtl] footer{text-align:right}[dir=rtl] .cmd kbd{order:-1}
-</style>
-</head>
-<body>
-<header>
-  <div class="logo"><i>E/</i>ELIAS Tools</div>
-  <button class="btn g" id="askTop">Ask the assistant</button>
-</header>
-
-<section class="hero" id="hero">
-  <h1>Every tool you need, in one place.</h1>
-  <p class="sub">PDF, image, calculator, developer and security tools. Everything runs in your browser, so your files never leave your device.</p>
-  <label class="cmd"><input id="sq" type="search" placeholder="Find a tool: merge pdf, password, json…" autocomplete="off" aria-label="Find tool"><kbd>/</kbd></label>
-  <p class="meta" id="meta"></p>
-</section>
-
-<nav class="tabs" id="tabs" aria-label="Categories"></nav>
-<main><div class="grid" id="grid"></div><p id="none" hidden></p></main>
-
-<section class="trust">
-  <div><h2>Private by design</h2><p>Files are processed on your device and never uploaded. Close the tab and everything is gone.</p></div>
-  <div><h2>Fast, no sign-up</h2><p>Open a tool and use it. No account, no watermark, no limits.</p></div>
-  <div><h2>Assistant included</h2><p>Describe what you want to do and the assistant points you to the right tool.</p></div>
-</section>
-<footer>ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi</footer>
-
-<dialog id="dlg"><div class="dh"><h2 id="dt"></h2><button class="btn g" id="x">Close</button></div><div id="tp"></div></dialog>
-
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 4% 56px;background:radial-gradient(ellipse at 80% 15%,#ffd40040,#0000 55%),linear-gradient(#000,#141414)}
+h1{font:clamp(54px,10vw,132px)/.9 'Bebas Neue',Impact,sans-serif;max-width:880px}
+.hero p{max-width:520px;color:#ccc;margin:18px 0 26px;font-size:18px}
+.b{border:0;padding:10px 26px;border-radius:4px;font:600 16px system-ui;cursor:pointer;margin-right:10px}
+.b.y{background:var(--y);color:#000}.b.g{background:#6d6d6eb3;color:#fff}.b:hover{opacity:.85}
+.row{padding:0 4%;margin:8px 0 18px}
+.row h2{font-size:20px;margin-bottom:2px}
+.rail{display:flex;gap:8px;overflow-x:auto;padding:12px 6px 26px;margin:0 -6px;scrollbar-width:none}
+.grid{display:flex;flex-wrap:wrap;gap:8px;padding-top:12px}
+.card{flex:0 0 190px;min-height:116px;overflow-wrap:anywhere;background:linear-gradient(135deg,hsl(var(--h) 45% 24%),#1c1c1c);border:0;border-radius:4px;padding:12px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;text-align:start;gap:8px;color:#fff;font:600 14px/1.3 system-ui;transition:transform .2s}
+.card i{font-size:24px;line-height:1;font-style:normal}
+.card:hover,.card:focus-visible{transform:scale(1.06);z-index:2;box-shadow:0 8px 24px #000a}
+#m{position:fixed;inset:0;background:#000c;display:none;place-items:center;z-index:9;padding:16px}
+#m.o{display:grid}
+#mb{position:relative;background:#181818;border-radius:8px;width:min(620px,100%);max-height:90vh;overflow:auto;padding:26px}
+#mb h3{font:30px 'Bebas Neue',Impact,sans-serif;color:var(--y);letter-spacing:1px}
+.x{position:absolute;inset-inline-end:14px;top:10px;background:0;border:0;color:#fff;font-size:22px;cursor:pointer}
+textarea,input,select{width:100%;background:#2b2b2b;color:#fff;border:1px solid #444;border-radius:4px;padding:9px;font:14px ui-monospace,monospace;margin:6px 0}
+label{display:block;color:var(--m);font-size:13px}
+#out{white-space:pre-wrap;background:#000;border-radius:4px;padding:12px;min-height:56px;word-break:break-all;margin:12px 0 0;font:14px ui-monospace,monospace}
+#fab{position:fixed;right:18px;bottom:18px;z-index:8;box-shadow:0 4px 18px #000a;margin:0}
+#ap{position:fixed;right:18px;bottom:70px;z-index:8;width:min(360px,calc(100vw - 36px));height:420px;background:#181818;border:1px solid #333;border-radius:8px;display:none;flex-direction:column}
+#ap.o{display:flex}
+#ml{flex:1;overflow:auto;padding:12px}
+#ml p{margin:6px 0;padding:8px 11px;border-radius:8px;max-width:85%;white-space:pre-wrap}
+.bot{background:#2b2b2b}.me{background:var(--y);color:#000;margin-left:auto!important}
+.in{display:flex;gap:6px;padding:8px;border-top:1px solid #333}.in input{margin:0}.in .b{margin:0;padding:8px 14px}
+footer{padding:40px 4% 90px;color:var(--m);font-size:13px}
+@media(max-width:700px){nav{display:none}#q{flex:1;min-width:0;width:auto}.card{flex-basis:152px;min-height:108px}.logo{font-size:28px}header{gap:12px}#ap{height:60vh}}
+#lg{width:auto;margin:0;padding:7px;font-family:system-ui}
+[dir=rtl] h1,[dir=rtl] #mb h3{font-family:system-ui;font-weight:800;line-height:1.15}
+[dir=rtl] h1{font-size:clamp(36px,7vw,84px)}
+@media(prefers-reduced-motion:reduce){.card,header{transition:none}}
+</style></head><body>
+<header id=h><span class=logo>ELIAS</span><nav id=nav></nav><input id=q type=search placeholder="Search tools" aria-label="Search"><select id=lg onchange=sl(this.value) aria-label=Language><option value=en>English<option value=fr>Français<option value=ar>العربية</select></header>
+<section class=hero><h1 id=h1>Every tool you need. One place.</h1>
+<p id=hp>141 free tools for text, code, money, health, math and more. Everything runs in your browser, so your data never leaves your device.</p>
+<div><button id=b1 class="b y" onclick="document.getElementById('pop').scrollIntoView({behavior:'smooth'})">Browse tools</button><button id=b2 class="b g" onclick=tg()>Ask AI</button></div></section>
+<main id=rows></main>
+<div id=m onclick="if(event.target==this)cl()"><div id=mb><button class=x onclick=cl() aria-label=Close>✕</button><div id=f oninput=run()></div><button id=br class="b y" onclick=run()>Run</button><button id=bc class="b g" onclick=copy(this)>Copy result</button><pre id=out dir=auto></pre></div></div>
+<button id=fab class="b y" onclick=tg()>✦ Ask AI</button>
+<div id=ap><div id=ml></div><div class=in><input id=ai placeholder="What do you want to do?" onkeydown="event.key=='Enter'&&send()"><button id=bs class="b y" onclick=send()>Send</button></div></div>
+<footer id=ft>ELIAS Tools. Free to use. Files and text are processed on your device and never uploaded. © 2026 Elias Khlifi</footer>
 <script>
-const $=s=>document.querySelector(s),q=(e,s)=>e.querySelector(s);
-const st=(e,t,bad)=>{const p=q(e,'.st');p.textContent=t;p.className='st'+(bad?' bad':'')};
-const load=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.append(s)});
-const U={Length:{m:1,km:1e3,cm:.01,mi:1609.344,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495},Temperature:{'°C':1,'°F':1,K:1}};
-const T=[
-{id:'pdf',n:'Merge PDFs',c:'Files',g:'PDF',k:'combine join pdf documents',d:'Combine several PDF files into one, in the order you choose.',r:e=>{
- e.innerHTML=`<input id=f type=file accept=application/pdf multiple><div class=big>Choose two or more PDFs, in the order you want them.</div><div class=row><button class=btn id=g>Merge PDFs</button><a class="btn g" id=d hidden download=merged.pdf>Download</a></div><p class=st></p>`;
- q(e,'#g').onclick=async()=>{const fs=[...q(e,'#f').files];if(fs.length<2)return st(e,'Select at least two PDF files.',1);
-  try{st(e,'Merging…');if(!window.PDFLib)await load('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
-  const m=await PDFLib.PDFDocument.create();for(const f of fs){const d=await PDFLib.PDFDocument.load(await f.arrayBuffer());(await m.copyPages(d,d.getPageIndices())).forEach(p=>m.addPage(p))}
-  const a=q(e,'#d');a.href=URL.createObjectURL(new Blob([await m.save()],{type:'application/pdf'}));a.hidden=false;st(e,`Merged ${fs.length} files. Nothing was uploaded.`)}
-  catch(x){st(e,'Could not merge. A file may be encrypted or damaged.',1)}}}},
-{id:'image',n:'Image compressor',c:'Files',g:'IMG',k:'compress resize photo jpg png webp smaller',d:'Shrink photos to JPEG or WebP with a quality slider.',r:e=>{
- e.innerHTML=`<input id=f type=file accept="image/*"><div class=row><span>Quality <b id=l>70</b>%</span><input id=n type=range min=10 max=95 value=70><select id=t><option value=image/jpeg>JPEG<option value=image/webp>WebP</select></div><div class=big id=o>Choose an image.</div><a class=btn id=d hidden>Download</a><p class=st></p>`;
- e.oninput=async()=>{const f=q(e,'#f').files[0];q(e,'#l').textContent=q(e,'#n').value;if(!f)return;
-  try{const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;c.getContext('2d').drawImage(b,0,0);const t=q(e,'#t').value;
-  c.toBlob(bl=>{const d=q(e,'#d');d.href=URL.createObjectURL(bl);d.download='compressed.'+(t.endsWith('webp')?'webp':'jpg');d.hidden=false;q(e,'#o').textContent=`${(f.size/1024).toFixed(0)} KB → ${(bl.size/1024).toFixed(0)} KB (${Math.round(100-bl.size/f.size*100)}% smaller)`},t,q(e,'#n').value/100)}
-  catch(x){st(e,'This file is not a supported image.',1)}}}},
-{id:'json',n:'JSON formatter',c:'Developer',g:'{ }',k:'json validate minify beautify pretty',d:'Format, minify and validate JSON with clear error messages.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Paste JSON here"></textarea><div class=row><button class=btn data-a=f>Format</button><button class="btn g" data-a=m>Minify</button></div><textarea id=o readonly></textarea><p class=st></p>`;
- e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;try{q(e,'#o').value=JSON.stringify(JSON.parse(q(e,'#i').value),null,a=='f'?2:0);st(e,'Valid JSON')}catch(x){st(e,x.message,1)}}}},
-{id:'b64',n:'Base64 encoder',c:'Developer',g:'64',k:'base64 encode decode text',d:'Encode text to Base64 or decode it back, with full Unicode support.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Text or Base64"></textarea><div class=row><button class=btn data-a=e>Encode</button><button class="btn g" data-a=d>Decode</button></div><textarea id=o readonly></textarea><p class=st></p>`;
- e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;const v=q(e,'#i').value;try{q(e,'#o').value=a=='e'?btoa(String.fromCharCode(...new TextEncoder().encode(v))):new TextDecoder().decode(Uint8Array.from(atob(v.trim()),c=>c.charCodeAt(0)));st(e,'Done')}catch(x){st(e,'This is not valid Base64.',1)}}}},
-{id:'qr',n:'QR code maker',c:'Developer',g:'QR',k:'qr code link generator',d:'Turn any link or text into a QR code you can save.',r:e=>{
- e.innerHTML=`<input type=text id=i value="https://codebind20.github.io/ilies-tools/" aria-label="Text or link"><div id=o style="background:#fff;padding:10px;width:fit-content;border-radius:6px"></div><p class=st>Right-click or long-press the code to save it.</p>`;
- const go=async()=>{try{if(!window.QRCode)await load('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');const o=q(e,'#o');o.innerHTML='';new QRCode(o,{text:q(e,'#i').value||' ',width:220,height:220,colorDark:'#0A1030',colorLight:'#ffffff'})}catch(x){st(e,'Could not load the QR library. Check your connection.',1)}};e.oninput=go;go()}},
-{id:'pass',n:'Password generator',c:'Security',g:'***',k:'password random secure strong',d:'Create strong random passwords. Generated locally with your browser\'s crypto.',o:'#o',r:e=>{
- e.innerHTML=`<div class=big id=o></div><div class=row><span>Length <b id=l></b></span><input id=n type=range min=8 max=64 value=20></div><div class=row><label><input type=checkbox id=u checked> Uppercase</label><label><input type=checkbox id=w checked> Numbers</label><label><input type=checkbox id=y checked> Symbols</label></div><button class=btn id=g>Generate again</button><p class=st></p>`;
- const go=()=>{let p='abcdefghijklmnopqrstuvwxyz';if(q(e,'#u').checked)p+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(q(e,'#w').checked)p+='0123456789';if(q(e,'#y').checked)p+='!@#$%^&*()-_=+[]{};:,.?';
-  const n=+q(e,'#n').value,a=new Uint32Array(n);crypto.getRandomValues(a);q(e,'#o').textContent=[...a].map(x=>p[x%p.length]).join('');q(e,'#l').textContent=n;const b=Math.round(n*Math.log2(p.length));st(e,`${b} bits of entropy: ${b<60?'weak':b<90?'good':'strong'}`)};
- e.oninput=go;q(e,'#g').onclick=go;go()}},
-{id:'hash',n:'Hash generator',c:'Security',g:'#',k:'sha checksum digest sha256 hash',d:'SHA-1, SHA-256 and SHA-512 hashes of any text.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Type or paste text"></textarea><select id=a><option>SHA-256<option>SHA-1<option>SHA-512</select><div class=big id=o></div><p class=st></p>`;
- const go=async()=>{const h=await crypto.subtle.digest(q(e,'#a').value,new TextEncoder().encode(q(e,'#i').value));q(e,'#o').textContent=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('')};e.oninput=go;go()}},
-{id:'units',n:'Unit converter',c:'Calculate',g:'⇄',k:'convert length weight temperature km miles kg lb celsius fahrenheit',d:'Convert length, weight and temperature instantly.',o:'#o',r:e=>{
- e.innerHTML=`<select id=c>${Object.keys(U).map(c=>`<option>${c}`).join('')}</select><div class=row><input id=v type=number value=1 step=any><select id=f></select><select id=t></select></div><div class=big id=o></div><p class=st></p>`;
- const go=()=>{const c=q(e,'#c').value,v=+q(e,'#v').value,f=q(e,'#f').value,t=q(e,'#t').value;let r;
-  if(c=='Temperature'){const k=f=='°C'?v+273.15:f=='°F'?(v-32)*5/9+273.15:v;r=t=='°C'?k-273.15:t=='°F'?(k-273.15)*9/5+32:k}else r=v*U[c][f]/U[c][t];q(e,'#o').textContent=+r.toPrecision(10)+' '+t};
- const fill=()=>{const u=Object.keys(U[q(e,'#c').value]).map(x=>`<option>${x}`).join('');q(e,'#f').innerHTML=q(e,'#t').innerHTML=u;q(e,'#t').selectedIndex=1;go()};
- e.oninput=go;q(e,'#c').onchange=fill;fill()}},
-{id:'calc',n:'Percentage and loan calculator',c:'Calculate',g:'%',k:'percent percentage loan payment interest mortgage calculator',d:'Work out percentages and monthly loan payments.',o:'#o',r:e=>{
- e.innerHTML=`<b>Percentage</b><div class=row><input id=p type=number value=15 step=any><span>% of</span><input id=b type=number value=240 step=any></div><div class=big id=o1></div><b>Loan payment</b><div class=row><input id=a type=number value=20000 aria-label=Amount><input id=r type=number value=7.5 step=any aria-label="Rate %"><input id=y type=number value=5 aria-label=Years></div><div class=big id=o></div><p class=st>Fields: amount, yearly rate %, years.</p>`;
- const go=()=>{const v=s=>+q(e,s).value;q(e,'#o1').textContent=+(v('#p')*v('#b')/100).toPrecision(10);const n=v('#y')*12,i=v('#r')/1200,a=v('#a'),m=i?a*i/(1-Math.pow(1+i,-n)):a/n;
-  q(e,'#o').textContent=isFinite(m)?`${m.toFixed(2)} per month · ${(m*n-a).toFixed(2)} total interest`:'Enter amount, rate and years.'};e.oninput=go;go()}},
-{id:'words',n:'Word counter',c:'Text',g:'Aa',k:'words characters count reading time text',d:'Count words, characters and sentences, and estimate reading time.',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Paste your text"></textarea><div class=big id=o></div><p class=st></p>`;
- const go=()=>{const v=q(e,'#i').value,t=v.trim(),w=t?t.split(/\s+/).length:0;q(e,'#o').textContent=`${w} words · ${v.length} characters · ${t?t.split(/[.!?]+(\s|$)/).filter(s=>s&&s.trim()).length:0} sentences · ${w?Math.max(1,Math.round(w/220)):0} min read`};e.oninput=go;go()}}
-];
-const cats=['All',...new Set(T.map(t=>t.c))];let cat='All';
-const dlg=$('#dlg'),tp=$('#tp');
+const T=[],C=[];let cat,cur;
+const G=(n,i,h)=>C.push(cat={n,i,h}),t=(n,f,l,u)=>T.push({n,f,l,u,c:cat});
+const w=s=>s.toLowerCase().match(/[a-z0-9]+/g)||[],nums=s=>(s.match(/-?\d+\.?\d*/g)||[]).map(Number),sum=a=>a.reduce((x,y)=>x+y,0),r2=x=>+x.toFixed(2);
+const freq=a=>Object.entries(a.reduce((o,x)=>(o[x]=(o[x]||0)+1,o),{})).sort((x,y)=>y[1]-x[1]).map(e=>e.join(': ')).join('\n');
+const g=(a,b)=>b?g(b,a%b):a,enc=s=>[...new TextEncoder().encode(s)],dec=a=>new TextDecoder().decode(Uint8Array.from(a));
+const hx=a=>async s=>[...new Uint8Array(await crypto.subtle.digest(a,new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,0)).join('');
+const M=Object.fromEntries("A.- B-... C-.-. D-.. E. F..-. G--. H.... I.. J.--- K-.- L.-.. M-- N-. O--- P.--. Q--.- R.-. S... T- U..- V...- W.-- X-..- Y-.-- Z--.. 0----- 1.---- 2..--- 3...-- 4....- 5..... 6-.... 7--... 8---.. 9----.".split(' ').map(x=>[x[0],x.slice(1)]));
+const L='lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' '),PW='abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*?',rnd=()=>crypto.getRandomValues(new Uint8Array(64));
 
-function match(t,s){s=s.toLowerCase().trim();return !s||s.split(/\s+/).every(w=>(t.n+' '+t.d+' '+t.k+' '+t.c).toLowerCase().includes(w))}
-function draw(){const s=$('#sq').value,list=T.filter(t=>(cat=='All'||t.c==cat)&&match(t,s));
- $('#grid').innerHTML=list.map(t=>`<button class=t data-id=${t.id}><span class=gl>${t.g}</span><b>${t.n}</b><span>${t.d}</span></button>`).join('');
- $('#grid').hidden=!list.length;const n=$('#none');n.hidden=!!list.length;n.innerHTML=`No tool matches "<span id=nq></span>". `;$('#nq').textContent=s;
- const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>window.EliasAddon&&EliasAddon.open(true);n.append(b);
- $('#tabs').innerHTML=cats.map(c=>`<button aria-pressed=${c==cat} data-c="${c}">${c}</button>`).join('');return list}
-function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textContent=t.n;tp.onclick=tp.oninput=null;tp.innerHTML='';t.r(tp);
- if(t.o){const b=document.createElement('button');b.className='btn g';b.textContent='Copy result';b.onclick=()=>{const x=q(tp,t.o);navigator.clipboard.writeText(x.value??x.textContent);st(tp,'Copied to clipboard')};q(tp,'.st').before(b)}
- if(!dlg.open)dlg.showModal();history.replaceState(null,'','#'+id)}
-$('#grid').onclick=e=>{const b=e.target.closest('.t');if(b)openTool(b.dataset.id)};
-$('#tabs').onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
-$('#sq').oninput=draw;
-$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&window.EliasAddon&&EliasAddon.open(true)}};
-$('#x').onclick=()=>dlg.close();dlg.onclose=()=>history.replaceState(null,'',location.pathname);
-dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.key=='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&k=='k')){e.preventDefault();dlg.close();$('#sq').focus()}});
-$('#hero').onpointermove=e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',e.clientX-r.left+'px');e.currentTarget.style.setProperty('--my',e.clientY-r.top+'px')};
-$('#meta').textContent=`${T.length} tools · 0 uploads · works offline once loaded`;
+G('Text','📝',45);
+t('Uppercase',s=>s.toUpperCase());t('Lowercase',s=>s.toLowerCase());
+t('Title Case',s=>s.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()));
+t('Sentence case',s=>s.toLowerCase().replace(/(^\s*|[.!?]\s+)(\w)/g,(m,a,b)=>a+b.toUpperCase()));
+t('camelCase',s=>w(s).map((x,i)=>i?x[0].toUpperCase()+x.slice(1):x).join(''));
+t('snake_case',s=>w(s).join('_'));t('kebab-case',s=>w(s).join('-'));
+t('URL slug',s=>w(s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')).join('-'));
+t('Remove accents',s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+t('Reverse text',s=>[...s].reverse().join(''));t('Reverse words',s=>s.split(/\s+/).reverse().join(' '));
+t('Word counter',s=>`Words: ${(s.match(/\S+/g)||[]).length}\nCharacters: ${s.length}\nWithout spaces: ${s.replace(/\s/g,'').length}\nLines: ${s?s.split('\n').length:0}`);
+t('Reading time',s=>Math.ceil((s.match(/\S+/g)||[]).length/200)+' min');
+t('Remove duplicate lines',s=>[...new Set(s.split('\n'))].join('\n'));
+t('Sort lines A-Z',s=>s.split('\n').sort((a,b)=>a.localeCompare(b)).join('\n'));
+t('Remove empty lines',s=>s.split('\n').filter(x=>x.trim()).join('\n'));
+t('Remove extra spaces',s=>s.replace(/[ \t]+/g,' ').trim());
+t('Add line numbers',s=>s.split('\n').map((x,i)=>i+1+'. '+x).join('\n'));
+t('Text to binary',s=>enc(s).map(b=>b.toString(2).padStart(8,0)).join(' '));
+t('Binary to text',s=>dec((s.match(/[01]{8}/g)||[]).map(b=>parseInt(b,2))));
+t('Text to hex',s=>enc(s).map(b=>b.toString(16).padStart(2,0)).join(' '));
+t('Hex to text',s=>dec((s.match(/[0-9a-f]{2}/gi)||[]).map(h=>parseInt(h,16))));
+t('Text to ASCII codes',s=>[...s].map(c=>c.charCodeAt()).join(' '));
+t('ASCII codes to text',s=>String.fromCharCode(...nums(s)));
+t('Morse encode',s=>[...s.toUpperCase()].map(c=>c==' '?'/':M[c]||'').join(' '));
+t('Morse decode',s=>s.split(' / ').map(x=>x.split(' ').map(c=>Object.keys(M).find(k=>M[k]==c)||'').join('')).join(' '));
+t('ROT13',s=>s.replace(/[a-z]/gi,c=>String.fromCharCode((c<='Z'?90:122)>=(c=c.charCodeAt()+13)?c:c-26)));
+t('Atbash cipher',s=>s.replace(/[a-z]/gi,c=>{let b=c<'a'?65:97;return String.fromCharCode(b+25-(c.charCodeAt()-b))}));
+t('Palindrome checker',s=>{let a=s.toLowerCase().replace(/[^a-z0-9]/g,'');return a&&a==[...a].reverse().join('')?'Yes, it is a palindrome':'No'});
+t('Letter frequency',s=>freq(s.toLowerCase().match(/[a-z]/g)||[]));
+t('Word frequency',s=>freq(s.toLowerCase().match(/\w+/g)||[]));
+t('Extract emails',s=>(s.match(/[\w.+-]+@[\w-]+\.[\w.-]+/g)||[]).join('\n'));
+t('Extract URLs',s=>(s.match(/https?:\/\/[^\s"'<>]+/g)||[]).join('\n'));
+t('Extract numbers',s=>(s.match(/-?\d+\.?\d*/g)||[]).join('\n'));
+t('Strip HTML tags',s=>s.replace(/<[^>]*>/g,''));
+t('Lorem ipsum',n=>Array.from({length:Math.min(n||1,20)},()=>Array.from({length:40},()=>L[Math.random()*L.length|0]).join(' ')+'.').join('\n\n'),['Paragraphs']);
 
-$('#askTop').onclick=()=>window.EliasAddon&&EliasAddon.open(true);
-draw();if(location.hash)openTool(location.hash.slice(1));
-</script>
-<script>
-/* ELIAS add-on: assistant, EN/FR/AR, file converters. Set ENDPOINT below to turn on Claude (never put an API key here). */
-(() => {
-const CFG = { ENDPOINT: '', RTL_PAGE: true };   // RTL_PAGE:true also flips the whole page to right-to-leftze photo jpg png webp smaller',d:'Shrink photos to JPEG or WebP with a quality slider.',r:e=>{
- e.innerHTML=`<input id=f type=file accept="image/*"><div class=row><span>Quality <b id=l>70</b>%</span><input id=n type=range min=10 max=95 value=70><select id=t><option value=image/jpeg>JPEG<option value=image/webp>WebP</select></div><div class=big id=o>Choose an image.</div><a class=btn id=d hidden>Download</a><p class=st></p>`;
- e.oninput=async()=>{const f=q(e,'#f').files[0];q(e,'#l').textContent=q(e,'#n').value;if(!f)return;
-  try{const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;c.getContext('2d').drawImage(b,0,0);const t=q(e,'#t').value;
-  c.toBlob(bl=>{const d=q(e,'#d');d.href=URL.createObjectURL(bl);d.download='compressed.'+(t.endsWith('webp')?'webp':'jpg');d.hidden=false;q(e,'#o').textContent=`${(f.size/1024).toFixed(0)} KB → ${(bl.size/1024).toFixed(0)} KB (${Math.round(100-bl.size/f.size*100)}% smaller)`},t,q(e,'#n').value/100)}
-  catch(x){st(e,'This file is not a supported image.',1)}}}},
-{id:'json',n:'JSON formatter',c:'Developer',g:'{ }',k:'json validate minify beautify pretty',d:'Format, minify and validate JSON with clear error messages.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Paste JSON here"></textarea><div class=row><button class=btn data-a=f>Format</button><button class="btn g" data-a=m>Minify</button></div><textarea id=o readonly></textarea><p class=st></p>`;
- e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;try{q(e,'#o').value=JSON.stringify(JSON.parse(q(e,'#i').value),null,a=='f'?2:0);st(e,'Valid JSON')}catch(x){st(e,x.message,1)}}}},
-{id:'b64',n:'Base64 encoder',c:'Developer',g:'64',k:'base64 encode decode text',d:'Encode text to Base64 or decode it back, with full Unicode support.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Text or Base64"></textarea><div class=row><button class=btn data-a=e>Encode</button><button class="btn g" data-a=d>Decode</button></div><textarea id=o readonly></textarea><p class=st></p>`;
- e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;const v=q(e,'#i').value;try{q(e,'#o').value=a=='e'?btoa(String.fromCharCode(...new TextEncoder().encode(v))):new TextDecoder().decode(Uint8Array.from(atob(v.trim()),c=>c.charCodeAt(0)));st(e,'Done')}catch(x){st(e,'This is not valid Base64.',1)}}}},
-{id:'qr',n:'QR code maker',c:'Developer',g:'QR',k:'qr code link generator',d:'Turn any link or text into a QR code you can save.',r:e=>{
- e.innerHTML=`<input type=text id=i value="https://codebind20.github.io/ilies-tools/" aria-label="Text or link"><div id=o style="background:#fff;padding:10px;width:fit-content;border-radius:6px"></div><p class=st>Right-click or long-press the code to save it.</p>`;
- const go=async()=>{try{if(!window.QRCode)await load('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');const o=q(e,'#o');o.innerHTML='';new QRCode(o,{text:q(e,'#i').value||' ',width:220,height:220,colorDark:'#0A1030',colorLight:'#ffffff'})}catch(x){st(e,'Could not load the QR library. Check your connection.',1)}};e.oninput=go;go()}},
-{id:'pass',n:'Password generator',c:'Security',g:'***',k:'password random secure strong',d:'Create strong random passwords. Generated locally with your browser\'s crypto.',o:'#o',r:e=>{
- e.innerHTML=`<div class=big id=o></div><div class=row><span>Length <b id=l></b></span><input id=n type=range min=8 max=64 value=20></div><div class=row><label><input type=checkbox id=u checked> Uppercase</label><label><input type=checkbox id=w checked> Numbers</label><label><input type=checkbox id=y checked> Symbols</label></div><button class=btn id=g>Generate again</button><p class=st></p>`;
- const go=()=>{let p='abcdefghijklmnopqrstuvwxyz';if(q(e,'#u').checked)p+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(q(e,'#w').checked)p+='0123456789';if(q(e,'#y').checked)p+='!@#$%^&*()-_=+[]{};:,.?';
-  const n=+q(e,'#n').value,a=new Uint32Array(n);crypto.getRandomValues(a);q(e,'#o').textContent=[...a].map(x=>p[x%p.length]).join('');q(e,'#l').textContent=n;const b=Math.round(n*Math.log2(p.length));st(e,`${b} bits of entropy: ${b<60?'weak':b<90?'good':'strong'}`)};
- e.oninput=go;q(e,'#g').onclick=go;go()}},
-{id:'hash',n:'Hash generator',c:'Security',g:'#',k:'sha checksum digest sha256 hash',d:'SHA-1, SHA-256 and SHA-512 hashes of any text.',o:'#o',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Type or paste text"></textarea><select id=a><option>SHA-256<option>SHA-1<option>SHA-512</select><div class=big id=o></div><p class=st></p>`;
- const go=async()=>{const h=await crypto.subtle.digest(q(e,'#a').value,new TextEncoder().encode(q(e,'#i').value));q(e,'#o').textContent=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('')};e.oninput=go;go()}},
-{id:'units',n:'Unit converter',c:'Calculate',g:'⇄',k:'convert length weight temperature km miles kg lb celsius fahrenheit',d:'Convert length, weight and temperature instantly.',o:'#o',r:e=>{
- e.innerHTML=`<select id=c>${Object.keys(U).map(c=>`<option>${c}`).join('')}</select><div class=row><input id=v type=number value=1 step=any><select id=f></select><select id=t></select></div><div class=big id=o></div><p class=st></p>`;
- const go=()=>{const c=q(e,'#c').value,v=+q(e,'#v').value,f=q(e,'#f').value,t=q(e,'#t').value;let r;
-  if(c=='Temperature'){const k=f=='°C'?v+273.15:f=='°F'?(v-32)*5/9+273.15:v;r=t=='°C'?k-273.15:t=='°F'?(k-273.15)*9/5+32:k}else r=v*U[c][f]/U[c][t];q(e,'#o').textContent=+r.toPrecision(10)+' '+t};
- const fill=()=>{const u=Object.keys(U[q(e,'#c').value]).map(x=>`<option>${x}`).join('');q(e,'#f').innerHTML=q(e,'#t').innerHTML=u;q(e,'#t').selectedIndex=1;go()};
- e.oninput=go;q(e,'#c').onchange=fill;fill()}},
-{id:'calc',n:'Percentage and loan calculator',c:'Calculate',g:'%',k:'percent percentage loan payment interest mortgage calculator',d:'Work out percentages and monthly loan payments.',o:'#o',r:e=>{
- e.innerHTML=`<b>Percentage</b><div class=row><input id=p type=number value=15 step=any><span>% of</span><input id=b type=number value=240 step=any></div><div class=big id=o1></div><b>Loan payment</b><div class=row><input id=a type=number value=20000 aria-label=Amount><input id=r type=number value=7.5 step=any aria-label="Rate %"><input id=y type=number value=5 aria-label=Years></div><div class=big id=o></div><p class=st>Fields: amount, yearly rate %, years.</p>`;
- const go=()=>{const v=s=>+q(e,s).value;q(e,'#o1').textContent=+(v('#p')*v('#b')/100).toPrecision(10);const n=v('#y')*12,i=v('#r')/1200,a=v('#a'),m=i?a*i/(1-Math.pow(1+i,-n)):a/n;
-  q(e,'#o').textContent=isFinite(m)?`${m.toFixed(2)} per month · ${(m*n-a).toFixed(2)} total interest`:'Enter amount, rate and years.'};e.oninput=go;go()}},
-{id:'words',n:'Word counter',c:'Text',g:'Aa',k:'words characters count reading time text',d:'Count words, characters and sentences, and estimate reading time.',r:e=>{
- e.innerHTML=`<textarea id=i placeholder="Paste your text"></textarea><div class=big id=o></div><p class=st></p>`;
- const go=()=>{const v=q(e,'#i').value,t=v.trim(),w=t?t.split(/\s+/).length:0;q(e,'#o').textContent=`${w} words · ${v.length} characters · ${t?t.split(/[.!?]+(\s|$)/).filter(s=>s&&s.trim()).length:0} sentences · ${w?Math.max(1,Math.round(w/220)):0} min read`};e.oninput=go;go()}}
-];
-const cats=['All',...new Set(T.map(t=>t.c))];let cat='All';
-const dlg=$('#dlg'),tp=$('#tp');
+G('Developer','💻',205);
+t('JSON formatter',s=>JSON.stringify(JSON.parse(s),null,2));t('JSON minifier',s=>JSON.stringify(JSON.parse(s)));
+t('JSON validator',s=>{try{JSON.parse(s);return 'Valid JSON'}catch(e){return 'Invalid: '+e.message}});
+t('JSON string escape',s=>JSON.stringify(s));t('JSON string unescape',s=>JSON.parse(s));
+t('Base64 encode',s=>btoa(String.fromCharCode(...enc(s))));t('Base64 decode',s=>dec([...atob(s.trim())].map(c=>c.charCodeAt())));
+t('URL encode',encodeURIComponent);t('URL decode',decodeURIComponent);
+t('HTML escape',s=>s.replace(/[&<>"']/g,c=>'&#'+c.charCodeAt()+';'));
+t('HTML unescape',s=>{let d=document.createElement('textarea');d.innerHTML=s;return d.value});
+t('CSS minifier',s=>s.replace(/\/\*[\s\S]*?\*\/|\s+/g,' ').replace(/\s*([{};:,])\s*/g,'$1').trim());
+t('UUID generator',()=>crypto.randomUUID(),[]);
+t('SHA-256 hash',hx('SHA-256'));t('SHA-1 hash',hx('SHA-1'));t('SHA-512 hash',hx('SHA-512'));
+t('Timestamp to date',s=>new Date(+s*(s.length<12?1e3:1)).toISOString());
+t('Date to timestamp',s=>Math.floor(new Date(s)/1e3));t('Current timestamp',()=>Math.floor(Date.now()/1e3),[]);
+t('Regex tester',s=>{let[p,...r]=s.split('\n'),m=p.match(/^\/(.*)\/(\w*)$/);return (r.join('\n').match(new RegExp(m[1],m[2].includes('g')?m[2]:m[2]+'g'))||['No match']).join('\n')});
+t('HEX to RGB',s=>{let n=parseInt(s.replace('#',''),16);return `rgb(${n>>16}, ${n>>8&255}, ${n&255})`});
+t('RGB to HEX',s=>'#'+s.match(/\d+/g).slice(0,3).map(x=>(+x).toString(16).padStart(2,0)).join(''));
+t('Decimal to binary',s=>(+s).toString(2));t('Binary to decimal',s=>parseInt(s,2));
+t('Decimal to hex',s=>(+s).toString(16).toUpperCase());t('Hex to decimal',s=>parseInt(s,16));
+t('Number to Roman',n=>{let r='';[[1e3,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']].map(([v,s])=>{while(n>=v){r+=s;n-=v}});return r},['Number']);
+t('Roman to number',s=>{let v={I:1,V:5,X:10,L:50,C:100,D:500,M:1e3};return [...s.toUpperCase()].reduce((a,c,i,x)=>a+(v[c]<(v[x[i+1]]||0)?-v[c]:v[c]),0)});
+t('CSV to JSON',s=>{let[h,...r]=s.trim().split('\n').map(l=>l.split(','));return JSON.stringify(r.map(x=>Object.fromEntries(h.map((k,i)=>[k.trim(),x[i]]))),null,2)});
+t('JSON to CSV',s=>{let a=JSON.parse(s),k=Object.keys(a[0]);return [k,...a.map(o=>k.map(x=>o[x]))].join('\n')});
+t('JWT decoder',s=>s.trim().split('.').slice(0,2).map(p=>JSON.stringify(JSON.parse(atob(p.replace(/-/g,'+').replace(/_/g,'/'))),null,2)).join('\n\n'));
+t('URL query parser',s=>JSON.stringify(Object.fromEntries(new URL(s.trim()).searchParams),null,2));
+t('Browser info',()=>navigator.userAgent+'\n'+screen.width+'x'+screen.height+'\n'+navigator.language,[]);
+t('Random number',(a,b)=>a+Math.floor(Math.random()*(b-a+1)),['Min','Max']);
 
-function match(t,s){s=s.toLowerCase().trim();return !s||s.split(/\s+/).every(w=>(t.n+' '+t.d+' '+t.k+' '+t.c).toLowerCase().includes(w))}
-function draw(){const s=$('#sq').value,list=T.filter(t=>(cat=='All'||t.c==cat)&&match(t,s));
- $('#grid').innerHTML=list.map(t=>`<button class=t data-id=${t.id}><span class=gl>${t.g}</span><b>${t.n}</b><span>${t.d}</span></button>`).join('');
- $('#grid').hidden=!list.length;const n=$('#none');n.hidden=!!list.length;n.innerHTML=`No tool matches "<span id=nq></span>". `;$('#nq').textContent=s;
- const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>window.EliasAddon&&EliasAddon.open(true);n.append(b);
- $('#tabs').innerHTML=cats.map(c=>`<button aria-pressed=${c==cat} data-c="${c}">${c}</button>`).join('');return list}
-function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textContent=t.n;tp.onclick=tp.oninput=null;tp.innerHTML='';t.r(tp);
- if(t.o){const b=document.createElement('button');b.className='btn g';b.textContent='Copy result';b.onclick=()=>{const x=q(tp,t.o);navigator.clipboard.writeText(x.value??x.textContent);st(tp,'Copied to clipboard')};q(tp,'.st').before(b)}
- if(!dlg.open)dlg.showModal();history.replaceState(null,'','#'+id)}
-$('#grid').onclick=e=>{const b=e.target.closest('.t');if(b)openTool(b.dataset.id)};
-$('#tabs').onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
-$('#sq').oninput=draw;
-$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&window.EliasAddon&&EliasAddon.open(true)}};
-$('#x').onclick=()=>dlg.close();dlg.onclose=()=>history.replaceState(null,'',location.pathname);
-dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.key=='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&k=='k')){e.preventDefault();dlg.close();$('#sq').focus()}});
-$('#hero').onpointermove=e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',e.clientX-r.left+'px');e.currentTarget.style.setProperty('--my',e.clientY-r.top+'px')};
-$('#meta').textContent=`${T.length} tools · 0 uploads · works offline once loaded`;
+G('Security','🔒',350);
+t('Password generator',n=>Array.from(rnd().slice(0,Math.min(n||16,64)),x=>PW[x%PW.length]).join(''),['Length']);
+t('Password strength',s=>['Very weak','Weak','Weak','Fair','Good','Strong','Excellent'][[/[a-z]/,/[A-Z]/,/\d/,/\W/].filter(r=>r.test(s)).length+(s.length>11)+(s.length>15)]);
+t('Password entropy',s=>Math.round(s.length*Math.log2((/[a-z]/.test(s)*26)+(/[A-Z]/.test(s)*26)+(/\d/.test(s)*10)+(/\W/.test(s)*32)||1))+' bits');
+t('PIN generator',n=>Array.from(rnd().slice(0,Math.min(n||4,32)),x=>x%10).join(''),['Digits']);
+t('Secure token',n=>Array.from(rnd().slice(0,Math.min(n||32,64)),x=>x.toString(16).padStart(2,0)).join(''),['Bytes']);
 
-$('#askTop').onclick=()=>window.EliasAddon&&EliasAddon.open(true);
-draw();if(location.hash)openTool(location.hash.slice(1));
-</script>
-<script>
-/* ELIAS add-on: assistant, EN/FR/AR, file converters. Set ENDPOINT below to turn on Claude (never put an API key here). */
-(() => {
-const CFG = { ENDPOINT: '', RTL_PAGE: true };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
+G('Finance','💰',48);
+t('Percentage of',(p,x)=>p*x/100,['Percent','Of']);t('Percent change',(a,b)=>(b-a)/a*100,['From','To']);
+t('What percent is A of B',(a,b)=>a/b*100,['A','B']);
+t('Add percent',(x,p)=>x*(1+p/100),['Amount','Percent']);t('Subtract percent',(x,p)=>x*(1-p/100),['Amount','Percent']);
+t('Discount price',(p,d)=>`Pay: ${r2(p*(1-d/100))}\nSaved: ${r2(p*d/100)}`,['Price','Discount %']);
+t('VAT and tax',(a,r)=>`Tax: ${r2(a*r/100)}\nTotal: ${r2(a*(1+r/100))}`,['Amount','Tax rate %']);
+t('Tip calculator',(b,t,p)=>`Tip: ${r2(b*t/100)}\nTotal: ${r2(b*(1+t/100))}\nEach: ${r2(b*(1+t/100)/p)}`,['Bill','Tip %','People']);
+t('Loan payment',(a,b,c)=>{let r=b/1200,n=c*12;return r2(r?a*r/(1-(1+r)**-n):a/n)},['Loan amount','Yearly rate %','Years']);
+t('Compound interest',(a,b,c)=>r2(a*(1+b/100)**c),['Amount','Yearly rate %','Years']);
+t('Simple interest',(a,b,c)=>r2(a*b*c/100),['Amount','Yearly rate %','Years']);
+t('Profit margin',(c,p)=>(p-c)/p*100,['Cost','Price']);t('Markup',(c,p)=>(p-c)/c*100,['Cost','Price']);
+t('ROI',(a,b)=>(b-a)/a*100,['Invested','Final value']);
+t('Break-even units',(f,p,v)=>Math.ceil(f/(p-v)),['Fixed costs','Unit price','Unit cost']);
+t('Hourly to monthly pay',(a,b)=>r2(a*b*52/12),['Hourly rate','Hours per week']);
+t('Fuel cost',(a,b,c)=>r2(a*b/100*c),['Distance km','Liters per 100 km','Price per liter']);
 
-/* ---------- Translations of YOUR existing page text (exact-match). Add your own tool names here. ---------- */
-const PAGE = [
- { en:'Every tool you need, in one place.', fr:'Tous les outils dont vous avez besoin, au même endroit.', ar:'كل الأدوات التي تحتاجها في مكان واحد.' },
- { en:'PDF, image, calculator, developer and security tools. Everything runs in your browser, so your files never leave your device.', fr:"Outils PDF, image, calculatrice, développeur et sécurité. Tout s'exécute dans votre navigateur : vos fichiers ne quittent jamais votre appareil.", ar:'أدوات PDF والصور والحاسبة والمطورين والأمان. كل شيء يعمل داخل متصفحك، فلا تغادر ملفاتك جهازك أبداً.' },
- { en:'Find tool', fr:'Trouver un outil', ar:'ابحث عن أداة' },
- { en:'Run again', fr:'Relancer', ar:'تشغيل مجدداً' },
- { en:'Copy result', fr:'Copier le résultat', ar:'نسخ النتيجة' },
- { en:'ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi', fr:'ELIAS Tools. Gratuit. Les fichiers sont traités sur votre appareil et jamais envoyés. © 2026 Elias Khlifi', ar:'ELIAS Tools. مجاني. تتم معالجة الملفات على جهازك ولا يتم رفعها أبداً. © 2026 Elias Khlifi' },
- {en:'Merge PDF',fr:'Fusionner des PDF',ar:'دمج ملفات PDF'},{en:'Merge PDFs',fr:'Fusionner des PDF',ar:'دمج ملفات PDF'},{en:'Split PDF',fr:'Diviser un PDF',ar:'تقسيم ملف PDF'},
- {en:'Compress PDF',fr:'Compresser un PDF',ar:'ضغط ملف PDF'},{en:'Compress image',fr:"Compresser l'image",ar:'ضغط الصورة'},{en:'Resize image',fr:"Redimensionner l'image",ar:'تغيير حجم الصورة'},
- {en:'JSON formatter',fr:'Formateur JSON',ar:'منسّق JSON'},{en:'Password generator',fr:'Générateur de mots de passe',ar:'مولّد كلمات المرور'},
- {en:'QR code generator',fr:'Générateur de QR code',ar:'مولّد رمز QR'},{en:'Word counter',fr:'Compteur de mots',ar:'عدّاد الكلمات'},
- {en:'Unit converter',fr:"Convertisseur d'unités",ar:'محوّل الوحدات'},{en:'Calculator',fr:'Calculatrice',ar:'الحاسبة'},
- {en:'Download',fr:'Télécharger',ar:'تنزيل'},{en:'Upload',fr:'Téléverser',ar:'رفع'},{en:'Clear',fr:'Effacer',ar:'مسح'},{en:'Copy',fr:'Copier',ar:'نسخ'},
- {en:'PDF tools',fr:'Outils PDF',ar:'أدوات PDF'},{en:'Image tools',fr:'Outils image',ar:'أدوات الصور'},{en:'Developer tools',fr:'Outils développeur',ar:'أدوات المطورين'},
- {en:'Security tools',fr:'Outils de sécurité',ar:'أدوات الأمان'},{en:'Calculators',fr:'Calculatrices',ar:'الحاسبات'},{en:'Converters',fr:'Convertisseurs',ar:'المحوّلات'}
-];
+G('Health','💪',160);
+t('BMI',(a,b)=>(a/(b/100)**2).toFixed(1),['Weight kg','Height cm']);
+t('Daily calories (men)',(a,b,c)=>10*a+6.25*b-5*c+5,['Weight kg','Height cm','Age']);
+t('Daily calories (women)',(a,b,c)=>10*a+6.25*b-5*c-161,['Weight kg','Height cm','Age']);
+t('Daily water in liters',a=>r2(a*.033),['Weight kg']);t('Max heart rate',a=>220-a,['Age']);
+t('Running pace',(a,b)=>{let p=b/a;return Math.floor(p)+':'+String(Math.round(p%1*60)).padStart(2,'0')+' min/km'},['Distance km','Minutes']);
 
-PAGE.push(...[{"en": "Ask the assistant", "fr": "Demander à l’assistant", "ar": "اسأل المساعد"}, {"en": "Find a tool: merge pdf, password, json…", "fr": "Trouver un outil : fusionner pdf, mot de passe, json…", "ar": "ابحث عن أداة: دمج pdf، كلمة مرور، json…"}, {"en": "10 tools · 0 uploads · works offline once loaded", "fr": "10 outils · 0 envoi · fonctionne hors ligne une fois chargé", "ar": "10 أدوات · 0 رفع · يعمل دون اتصال بعد التحميل"}, {"en": "ELIAS Tools", "fr": "ELIAS Tools", "ar": "ELIAS Tools"}, {"en": "E/", "fr": "E/", "ar": "E/"}, {"en": "All", "fr": "Tous", "ar": "الكل"}, {"en": "Files", "fr": "Fichiers", "ar": "الملفات"}, {"en": "Developer", "fr": "Développeur", "ar": "المطورين"}, {"en": "Security", "fr": "Sécurité", "ar": "الأمان"}, {"en": "Calculate", "fr": "Calcul", "ar": "الحساب"}, {"en": "Text", "fr": "Texte", "ar": "النص"}, {"en": "Combine several PDF files into one, in the order you choose.", "fr": "Combinez plusieurs fichiers PDF en un seul, dans l’ordre de votre choix.", "ar": "ادمج عدة ملفات PDF في ملف واحد بالترتيب الذي تختاره."}, {"en": "Image compressor", "fr": "Compresseur d’images", "ar": "ضاغط الصور"}, {"en": "Shrink photos to JPEG or WebP with a quality slider.", "fr": "Réduisez le poids des photos en JPEG ou WebP avec un curseur de qualité.", "ar": "قلّل حجم الصور بصيغة JPEG أو WebP مع شريط لضبط الجودة."}, {"en": "Format, minify and validate JSON with clear error messages.", "fr": "Formatez, minifiez et validez du JSON avec des messages d’erreur clairs.", "ar": "نسّق JSON وصغّره وتحقق منه مع رسائل خطأ واضحة."}, {"en": "Base64 encoder", "fr": "Encodeur Base64", "ar": "مشفّر Base64"}, {"en": "Encode text to Base64 or decode it back, with full Unicode support.", "fr": "Encodez du texte en Base64 ou décodez-le, avec prise en charge complète d’Unicode.", "ar": "حوّل النص إلى Base64 أو فك تشفيره، مع دعم كامل لـ Unicode."}, {"en": "QR code maker", "fr": "Créateur de QR code", "ar": "منشئ رمز QR"}, {"en": "Turn any link or text into a QR code you can save.", "fr": "Transformez un lien ou un texte en QR code à enregistrer.", "ar": "حوّل أي رابط أو نص إلى رمز QR يمكنك حفظه."}, {"en": "Create strong random passwords. Generated locally with your browser's crypto.", "fr": "Créez des mots de passe aléatoires robustes, générés localement par votre navigateur.", "ar": "أنشئ كلمات مرور عشوائية قوية، تُولَّد محلياً بواسطة متصفحك."}, {"en": "Hash generator", "fr": "Générateur de hash", "ar": "مولّد التجزئة"}, {"en": "SHA-1, SHA-256 and SHA-512 hashes of any text.", "fr": "Hash SHA-1, SHA-256 et SHA-512 de n’importe quel texte.", "ar": "تجزئة SHA-1 وSHA-256 وSHA-512 لأي نص."}, {"en": "Convert length, weight and temperature instantly.", "fr": "Convertissez instantanément longueur, poids et température.", "ar": "حوّل الطول والوزن ودرجة الحرارة فوراً."}, {"en": "Percentage and loan calculator", "fr": "Calculatrice de pourcentage et de prêt", "ar": "حاسبة النسبة المئوية والقروض"}, {"en": "Work out percentages and monthly loan payments.", "fr": "Calculez des pourcentages et des mensualités de prêt.", "ar": "احسب النسب المئوية وأقساط القروض الشهرية."}, {"en": "Count words, characters and sentences, and estimate reading time.", "fr": "Comptez les mots, caractères et phrases, et estimez le temps de lecture.", "ar": "احسب الكلمات والأحرف والجمل وقدّر وقت القراءة."}, {"en": "Private by design", "fr": "Confidentialité par conception", "ar": "خصوصية بالتصميم"}, {"en": "Files are processed on your device and never uploaded. Close the tab and everything is gone.", "fr": "Les fichiers sont traités sur votre appareil et jamais envoyés. Fermez l’onglet et tout disparaît.", "ar": "تتم معالجة الملفات على جهازك ولا يتم رفعها أبداً. أغلق التبويب ويختفي كل شيء."}, {"en": "Fast, no sign-up", "fr": "Rapide, sans inscription", "ar": "سريع وبلا تسجيل"}, {"en": "Open a tool and use it. No account, no watermark, no limits.", "fr": "Ouvrez un outil et utilisez-le. Pas de compte, pas de filigrane, pas de limites.", "ar": "افتح أداة واستخدمها. بلا حساب ولا علامة مائية ولا حدود."}, {"en": "Assistant included", "fr": "Assistant inclus", "ar": "المساعد مضمّن"}, {"en": "Describe what you want to do and the assistant points you to the right tool.", "fr": "Décrivez ce que vous voulez faire et l’assistant vous indique le bon outil.", "ar": "صف ما تريد فعله ويرشدك المساعد إلى الأداة المناسبة."}, {"en": "Close", "fr": "Fermer", "ar": "إغلاق"}, {"en": "Choose two or more PDFs, in the order you want them.", "fr": "Choisissez au moins deux PDF, dans l’ordre souhaité.", "ar": "اختر ملفَّي PDF أو أكثر بالترتيب الذي تريده."}, {"en": "Choose an image.", "fr": "Choisissez une image.", "ar": "اختر صورة."}, {"en": "Quality", "fr": "Qualité", "ar": "الجودة"}, {"en": "Format", "fr": "Formater", "ar": "تنسيق"}, {"en": "Minify", "fr": "Minifier", "ar": "تصغير"}, {"en": "Valid JSON", "fr": "JSON valide", "ar": "JSON صالح"}, {"en": "Encode", "fr": "Encoder", "ar": "تشفير"}, {"en": "Decode", "fr": "Décoder", "ar": "فك التشفير"}, {"en": "This is not valid Base64.", "fr": "Ce n’est pas du Base64 valide.", "ar": "هذا ليس Base64 صالحاً."}, {"en": "Done", "fr": "Terminé", "ar": "تم"}, {"en": "Right-click or long-press the code to save it.", "fr": "Clic droit ou appui long sur le code pour l’enregistrer.", "ar": "انقر بزر الفأرة الأيمن أو اضغط مطولاً على الرمز لحفظه."}, {"en": "Generate again", "fr": "Générer à nouveau", "ar": "إنشاء من جديد"}, {"en": "Length", "fr": "Longueur", "ar": "الطول"}, {"en": "Uppercase", "fr": "Majuscules", "ar": "أحرف كبيرة"}, {"en": "Numbers", "fr": "Chiffres", "ar": "أرقام"}, {"en": "Symbols", "fr": "Symboles", "ar": "رموز"}, {"en": "Weight", "fr": "Poids", "ar": "الوزن"}, {"en": "Temperature", "fr": "Température", "ar": "درجة الحرارة"}, {"en": "Percentage", "fr": "Pourcentage", "ar": "النسبة المئوية"}, {"en": "% of", "fr": "% de", "ar": "% من"}, {"en": "Loan payment", "fr": "Mensualité du prêt", "ar": "قسط القرض"}, {"en": "Fields: amount, yearly rate %, years.", "fr": "Champs : montant, taux annuel %, années.", "ar": "الحقول: المبلغ، المعدل السنوي %، السنوات."}, {"en": "Copied to clipboard", "fr": "Copié dans le presse-papiers", "ar": "تم النسخ إلى الحافظة"}, {"en": "Select at least two PDF files.", "fr": "Sélectionnez au moins deux fichiers PDF.", "ar": "اختر ملفَّي PDF على الأقل."}, {"en": "Paste JSON here", "fr": "Collez du JSON ici", "ar": "الصق JSON هنا"}, {"en": "Text or Base64", "fr": "Texte ou Base64", "ar": "نص أو Base64"}, {"en": "Type or paste text", "fr": "Saisissez ou collez du texte", "ar": "اكتب أو الصق نصاً"}, {"en": "Paste your text", "fr": "Collez votre texte", "ar": "الصق نصك"}]);
+G('Math','📐',275);
+t('Sum of numbers',s=>sum(nums(s)));t('Average',s=>{let a=nums(s);return sum(a)/a.length});
+t('Median',s=>{let a=nums(s).sort((x,y)=>x-y),m=a.length>>1;return a.length%2?a[m]:(a[m-1]+a[m])/2});
+t('Min and max',s=>{let a=nums(s);return 'Min: '+Math.min(...a)+'\nMax: '+Math.max(...a)});
+t('Standard deviation',s=>{let a=nums(s),m=sum(a)/a.length;return Math.sqrt(sum(a.map(y=>(y-m)**2))/a.length)});
+t('Sort numbers',s=>nums(s).sort((x,y)=>x-y).join(', '));
+t('Circle area',r=>Math.PI*r*r,['Radius']);t('Circle circumference',r=>2*Math.PI*r,['Radius']);
+t('Triangle area',(b,h)=>b*h/2,['Base','Height']);t('Sphere volume',r=>4/3*Math.PI*r**3,['Radius']);
+t('Cylinder volume',(r,h)=>Math.PI*r*r*h,['Radius','Height']);t('Pythagorean theorem',(a,b)=>Math.hypot(a,b),['Side A','Side B']);
+t('Quadratic solver',(a,b,c)=>{let d=b*b-4*a*c;return d<0?'No real roots':[(-b+Math.sqrt(d))/(2*a),(-b-Math.sqrt(d))/(2*a)].join(', ')},['a','b','c']);
+t('GCD',g,['A','B']);t('LCM',(a,b)=>a/g(a,b)*b,['A','B']);
+t('Prime checker',n=>{if(n<2)return 'Not prime';for(let i=2;i*i<=n;i++)if(n%i==0)return 'Not prime, divisible by '+i;return 'Prime'},['Number']);
+t('Prime factors',n=>{let r=[];for(let i=2;i*i<=n;i++)while(n%i==0){r.push(i);n/=i}if(n>1)r.push(n);return r.join(' x ')},['Number']);
+t('Factorial',n=>{let r=1n;for(let i=2n;i<=BigInt(Math.min(n,500));i++)r*=i;return String(r)},['Number']);
+t('Fibonacci',n=>{let a=0n,b=1n;for(let i=0;i<Math.min(n,1000);i++)[a,b]=[b,a+b];return String(a)},['Position']);
+t('Logarithm',(x,b)=>Math.log(x)/Math.log(b),['Number','Base']);
 
-/* ---------- Add-on interface texts ---------- */
-const L = {
- en:{ title:'Assistant', tA:'Assistant', tT:'Tools', ph:'Ask anything…', send:'Send',
-  hi:'Hi! Ask me about the tools on this page, or open the Tools tab for link helpers and AI tools.',
-  m0:'Offline helper. Add your Claude endpoint to enable full AI.', m1:'Powered by Claude',
-  ytH:'YouTube link helper', ttH:'TikTok link cleaner', aiH:'AI tools', paste:'Paste a link', run:'Run', copy:'Copy', copied:'Copied',
-  bad:'This is not a valid link.', id:'Video ID', clean:'Clean link', embed:'Embed code', at:'Start at (seconds)',
-  note:"Video downloading is not offered here: it goes against YouTube and TikTok terms and can infringe creators' rights. Use YouTube Premium offline mode, or the Save option TikTok shows on videos whose owners allow it.",
-  noai:'AI is not connected yet. Set your Claude endpoint in elias-addon.js to enable it.',
-  w:'Social post writer', s:'Summarizer', t:'Translator', i:'Text improver', yt:'YouTube', tk:'TikTok', to:'Translate to', inp:'Your text or topic',
-  wait:'Thinking…', none:'I could not find that on this page. Try other words, or open the Tools tab.', found:'Here is what I found on this page:', show:'Show', err:'Something went wrong. Try again.', tC:'Convert', cvH:'File converter', f1:'Excel to PDF', f2:'PDF to Excel', f3:'PDF to Word', f4:'Word to PDF', go:'Convert', dl:'Download', busy:'Converting…', print:'The print window opened. Choose "Save as PDF" as the printer.', done:'Done. Your file is ready.', scan:'No text found. Scanned PDFs need OCR.', cerr:'Could not convert this file. Check the file type and try again.', cn:'Files stay on your device. PDF conversions work on PDFs with real text; layout and images may differ.', close:'Close' },
- fr:{ title:'Assistant', tA:'Assistant', tT:'Outils', ph:'Posez votre question…', send:'Envoyer',
-  hi:"Bonjour ! Posez-moi vos questions sur les outils de cette page, ou ouvrez l'onglet Outils pour les aides aux liens et les outils IA.",
-  m0:"Assistant hors ligne. Ajoutez votre point d'accès Claude pour activer l'IA complète.", m1:'Propulsé par Claude',
-  ytH:'Aide pour liens YouTube', ttH:'Nettoyeur de liens TikTok', aiH:'Outils IA', paste:'Collez un lien', run:'Lancer', copy:'Copier', copied:'Copié',
-  bad:"Ce lien n'est pas valide.", id:'ID de la vidéo', clean:'Lien propre', embed:"Code d'intégration", at:'Début à (secondes)',
-  note:"Le téléchargement de vidéos n'est pas proposé ici : il enfreint les conditions de YouTube et TikTok et peut porter atteinte aux droits des créateurs. Utilisez le mode hors ligne de YouTube Premium, ou l'option Enregistrer de TikTok sur les vidéos dont l'auteur l'autorise.",
-  noai:"L'IA n'est pas encore connectée. Renseignez votre point d'accès Claude dans elias-addon.js pour l'activer.",
-  w:'Rédacteur de posts', s:'Résumeur', t:'Traducteur', i:'Amélioration de texte', yt:'YouTube', tk:'TikTok', to:'Traduire en', inp:'Votre texte ou sujet',
-  wait:'Réflexion…', none:"Je n'ai rien trouvé sur cette page. Essayez d'autres mots ou ouvrez l'onglet Outils.", found:"Voici ce que j'ai trouvé sur cette page :", show:'Afficher', err:'Une erreur est survenue. Réessayez.', tC:'Convertir', cvH:'Convertisseur de fichiers', f1:'Excel vers PDF', f2:'PDF vers Excel', f3:'PDF vers Word', f4:'Word vers PDF', go:'Convertir', dl:'Télécharger', busy:'Conversion…', print:"La fenêtre d'impression est ouverte. Choisissez « Enregistrer au format PDF ».", done:'Terminé. Votre fichier est prêt.', scan:'Aucun texte trouvé. Les PDF scannés nécessitent une OCR.', cerr:'Conversion impossible. Vérifiez le type de fichier et réessayez.', cn:'Les fichiers restent sur votre appareil. Les conversions PDF fonctionnent sur les PDF contenant du vrai texte ; la mise en page et les images peuvent différer.', close:'Fermer' },
- ar:{ title:'المساعد', tA:'المساعد', tT:'الأدوات', ph:'اسأل أي شيء…', send:'إرسال',
-  hi:'مرحباً! اسألني عن أدوات هذه الصفحة، أو افتح تبويب الأدوات لمساعدات الروابط وأدوات الذكاء الاصطناعي.',
-  m0:'مساعد دون اتصال. أضف عنوان Claude لتفعيل الذكاء الاصطناعي الكامل.', m1:'مدعوم بواسطة Claude',
-  ytH:'مساعد روابط YouTube', ttH:'منظّف روابط TikTok', aiH:'أدوات الذكاء الاصطناعي', paste:'الصق رابطاً', run:'تشغيل', copy:'نسخ', copied:'تم النسخ',
-  bad:'هذا الرابط غير صالح.', id:'معرّف الفيديو', clean:'رابط نظيف', embed:'كود التضمين', at:'البدء عند (ثوانٍ)',
-  note:'لا يتم توفير تنزيل الفيديوهات هنا: فهو يخالف شروط YouTube وTikTok وقد ينتهك حقوق صانعي المحتوى. استخدم وضع عدم الاتصال في YouTube Premium، أو خيار الحفظ في TikTok للفيديوهات التي يسمح أصحابها بذلك.',
-  noai:'الذكاء الاصطناعي غير متصل بعد. أضف عنوان Claude في ملف elias-addon.js لتفعيله.',
-  w:'كاتب المنشورات', s:'التلخيص', t:'الترجمة', i:'تحسين النص', yt:'YouTube', tk:'TikTok', to:'ترجمة إلى', inp:'نصك أو موضوعك',
-  wait:'جارٍ التفكير…', none:'لم أجد ذلك في هذه الصفحة. جرّب كلمات أخرى أو افتح تبويب الأدوات.', found:'هذا ما وجدته في هذه الصفحة:', show:'إظهار', err:'حدث خطأ. حاول مرة أخرى.', tC:'تحويل', cvH:'محوّل الملفات', f1:'Excel إلى PDF', f2:'PDF إلى Excel', f3:'PDF إلى Word', f4:'Word إلى PDF', go:'تحويل', dl:'تنزيل', busy:'جارٍ التحويل…', print:'فتحت نافذة الطباعة. اختر «حفظ بصيغة PDF».', done:'تم. ملفك جاهز.', scan:'لم يتم العثور على نص. ملفات PDF الممسوحة ضوئياً تحتاج إلى OCR.', cerr:'تعذر تحويل هذا الملف. تحقق من نوع الملف وحاول مجدداً.', cn:'تبقى الملفات على جهازك. تعمل تحويلات PDF مع الملفات التي تحتوي على نص حقيقي، وقد يختلف التنسيق والصور.', close:'إغلاق' }
-};
-const LN = { en:'English', fr:'French', ar:'Arabic' };
-let lang = (() => { try { return localStorage.getItem('elias_lang') } catch (e) {} })() || ({ fr:'fr', ar:'ar' }[(navigator.language || '').slice(0, 2)]) || 'en';
-const d = () => L[lang];
-const h = (t, p = {}, ...k) => { const e = document.createElement(t); for (const [a, v] of Object.entries(p)) a == 'class' ? e.className = v : a.startsWith('on') ? e[a] = v : e.setAttribute(a, v); e.append(...k); return e };
+G('Converters','🔄',20);
+t('Length',0,0,{m:1,km:1e3,cm:.01,mm:.001,mi:1609.344,yd:.9144,ft:.3048,in:.0254});
+t('Weight',0,0,{kg:1,g:.001,mg:1e-6,t:1e3,lb:.45359237,oz:.0283495});
+t('Volume',0,0,{L:1,mL:.001,gal:3.785412,cup:.236588,floz:.0295735});
+t('Area',0,0,{m2:1,cm2:1e-4,km2:1e6,ha:1e4,acre:4046.856,ft2:.092903});
+t('Speed',0,0,{'m/s':1,'km/h':.277778,mph:.44704,knot:.514444});
+t('Data size',0,0,{B:1,KB:1024,MB:2**20,GB:2**30,TB:2**40});
+t('Time',0,0,{sec:1,min:60,hour:3600,day:86400,week:604800});
+t('Energy',0,0,{J:1,kJ:1e3,cal:4.184,kcal:4184,kWh:3.6e6});
+t('Pressure',0,0,{Pa:1,kPa:1e3,bar:1e5,psi:6894.757,atm:101325});
+t('Angle',0,0,{deg:1,rad:180/Math.PI,grad:.9});
+t('Celsius to Fahrenheit',c=>c*9/5+32,['°C']);t('Fahrenheit to Celsius',f=>(f-32)*5/9,['°F']);t('Celsius to Kelvin',c=>c+273.15,['°C']);
 
-/* ---------- Page translation: your dictionary first, then (if ENDPOINT is set) Claude translates anything else and caches it ---------- */
-const orig = new WeakMap(), SKIP = /^(SCRIPT|STYLE|TEXTAREA|CODE|PRE|NOSCRIPT)$/; let busy = false;
-const CACHE = {}; const cache = l => CACHE[l] || (CACHE[l] = (() => { try { return JSON.parse(localStorage.getItem('elias_tr_' + l)) || {} } catch (e) { return {} } })());
-function translatePage() {
-  const todo = new Set(), w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n;
-  while (n = w.nextNode()) {
-    const t = n.nodeValue.trim(); if (t.length < 2 || t.length > 90 || !/\p{L}/u.test(t) || SKIP.test(n.parentNode.nodeName)) continue;
-    let o = orig.get(n); if (o && t != o.en && t != o.tr) o = null;
-    if (!o) { o = { en: t, raw: n.nodeValue }; orig.set(n, o) }
-    if (lang == 'en') { n.nodeValue = o.raw; o.tr = null; continue }
-    const m = PAGE.find(p => p.en == o.en), tr = (m && m[lang]) || cache(lang)[o.en];
-    if (tr) { n.nodeValue = o.raw.replace(o.en, tr); o.tr = tr } else todo.add(o.en);
-  }
-  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(i => {
-    if (!i.dataset.eEn) { const m = PAGE.find(p => p.en == i.placeholder); if (!m) return; i.dataset.eEn = m.en }
-    const m = PAGE.find(p => p.en == i.dataset.eEn); i.placeholder = (lang != 'en' && m[lang]) || m.en;
-  });
-  document.documentElement.lang = lang;
-  if (CFG.RTL_PAGE) document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  if (lang != 'en' && todo.size && CFG.ENDPOINT && !busy) {
-    busy = true; const L0 = lang, arr = [...todo].slice(0, 60);
-    call(`Translate these website UI strings to ${LN[L0]}. Keep brand names, numbers and file extensions. Return ONLY a JSON array of strings, same length and order.`, [{ role: 'user', content: JSON.stringify(arr) }])
-      .then(o => { const r = JSON.parse(o.match(/\[[\s\S]*\]/)[0]); if (r.length == arr.length) { arr.forEach((k, i) => cache(L0)[k] = String(r[i])); try { localStorage.setItem('elias_tr_' + L0, JSON.stringify(cache(L0))) } catch (e) {} } })
-      .catch(() => {}).finally(() => { busy = false; if (lang == L0) translatePage() });
-  }
-}
-let tm; new MutationObserver(() => { clearTimeout(tm); tm = setTimeout(translatePage, 250) }).observe(document.body, { childList: true, subtree: true });
+G('Dates','📅',280);
+t('Age calculator',s=>{let b=new Date(s),n=new Date(),y=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))y--;return y+' years, '+Math.floor((n-b)/864e5)+' days'});
+t('Days until date',s=>Math.ceil((new Date(s)-Date.now())/864e5)+' days');
+t('Days between dates',s=>{let[a,b]=s.trim().split(/\s+/);return Math.abs((new Date(b)-new Date(a))/864e5)+' days'});
+t('Day of the week',s=>new Date(s).toLocaleDateString('en',{weekday:'long'}));
+t('Current date and time',()=>new Date().toString(),[]);
 
-/* ---------- AI call (through YOUR proxy) ---------- */
-async function call(system, messages) {
-  if (!CFG.ENDPOINT) throw 'noai';
-  const r = await fetch(CFG.ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system, messages }) });
-  const j = await r.json(); const o = j.text || (j.content || []).map(c => c.text || '').join(''); if (!o) throw 'err'; return o;
-}
+G('Fun','🎲',320);
+t('Dice roller',n=>1+Math.random()*n|0,['Sides']);t('Coin flip',()=>Math.random()<.5?'Heads':'Tails',[]);
+t('Random picker',s=>{let a=s.split('\n').filter(Boolean);return a[Math.random()*a.length|0]});
+t('Random color',()=>'#'+(Math.random()*16777215|0).toString(16).padStart(6,0),[]);
+t('Magic 8-ball',()=>['Yes','No','Maybe','Ask again later','Definitely','Unlikely'][Math.random()*6|0],[]);
 
-/* ---------- UI (Shadow DOM so it never touches your site's CSS) ---------- */
-const host = h('div', { id: 'elias-addon' }); document.body.append(host);
-const root = host.attachShadow({ mode: 'open' });
-root.innerHTML = `<style>
-:host{all:initial}*{box-sizing:border-box;font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
-.fab{position:fixed;right:16px;bottom:16px;z-index:2147483000;background:#ffd400;color:#111;border:0;border-radius:99px;padding:13px 18px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35)}
-.p{position:fixed;right:16px;bottom:72px;z-index:2147483000;width:min(400px,calc(100vw - 32px));height:min(600px,78vh);background:#14161c;color:#f2f4f8;border:1px solid #2c3140;border-radius:14px;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5);font-size:15px;line-height:1.5}
-.p.on{display:flex}
-.hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #2c3140}.hd b{flex:1}
-.hd small{display:block;color:#9aa3b8;font-size:12px;font-weight:400}
-button{font:inherit;cursor:pointer}:focus-visible{outline:2px solid #ffd400;outline-offset:2px}
-.lg button,.tb button{background:none;border:1px solid #2c3140;color:#c5cbdb;border-radius:6px;padding:3px 9px;font-size:13px}
-.lg button[aria-pressed=true],.tb button[aria-pressed=true]{background:#ffd400;color:#111;border-color:#ffd400}
-.lg{display:flex;gap:4px}.tb{display:flex;gap:6px;padding:10px 14px 0}
-.bd{flex:1;overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
-.m{padding:9px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap}.m.u{background:#3a5bff;justify-self:end}.m.a{background:#1d212b;border:1px solid #2c3140}
-.btn{background:#ffd400;color:#111;border:0;border-radius:6px;padding:8px 14px;font-weight:700}.btn.g{background:none;color:#f2f4f8;border:1px solid #2c3140}
-.m .btn{display:block;margin-top:6px;padding:5px 10px;font-size:13px}
-form{display:flex;gap:8px;padding:12px;border-top:1px solid #2c3140}
-input,select,textarea{width:100%;background:#0d0f14;color:#f2f4f8;border:1px solid #2c3140;border-radius:6px;padding:9px;font-size:14px}
-form input{flex:1;min-width:0;width:auto}textarea{min-height:90px;resize:vertical}
-.card{border:1px solid #2c3140;border-radius:10px;padding:12px;display:grid;gap:8px}.card h3{font-size:15px;margin:0}
-.out{display:grid;gap:6px}.rw{background:#0d0f14;border:1px solid #2c3140;border-radius:6px;padding:8px;font-size:13px}
-.rw span{display:block;color:#9aa3b8;font-size:12px}.rw code{word-break:break-all;font-family:ui-monospace,Menlo,monospace}.rw button{margin-top:6px;padding:3px 9px;font-size:12px}
-.bad{color:#ff9b9b;margin:0}.note{color:#c5cbdb;font-size:13px;margin:0}
-.r{display:flex;gap:8px}
-</style>`;
-const fab = h('button', { class: 'fab', 'aria-expanded': 'false' }, 'AI');
-const panel = h('div', { class: 'p', role: 'dialog' });
-const title = h('b'), mode = h('small'), lg = h('div', { class: 'lg' }), x = h('button', { class: 'btn g', onclick: () => open(false) }, '✕');
-const tb = h('div', { class: 'tb' }), body = h('div', { class: 'bd', 'aria-live': 'polite' });
-const inp = h('input', { autocomplete: 'off' }), send = h('button', { class: 'btn' }), form = h('form', {}, inp, send);
-panel.append(h('div', { class: 'hd' }, h('b', {}, title, mode), lg, x), tb, body, form); root.append(fab, panel);
-const hist = []; let tab = 'a', msgs = [];
+let LG='en';
+const I={
+en:{t:'ELIAS Tools | 140+ free online tools',h1:'Every tool you need. One place.',hp:n=>`${n} free tools for text, code, money, health, math and more. Everything runs in your browser, so your data never leaves your device.`,b1:'Browse tools',b2:'Ask AI',fab:'✦ Ask AI',q:'Search tools',ai:'What do you want to do?',send:'Send',run:'Run',copy:'Copy result',copied:'Copied',ph:'Paste or type here',res:'Results',none:'No tools found.',pop:'Popular tools',ft:'ELIAS Tools. Free to use. Files and text are processed on your device and never uploaded. © 2026 Elias Khlifi',hi:'Hi! Tell me what you want to do and I will find the right tool.',try:'Try: ',nm:'No match yet. Try another word.',noai:'(Claude AI is not connected yet. Set AI_URL in index.html.)',err:'Could not reach the AI service.',chk:'Check your numbers',er:'Error: '},
+fr:{t:'ELIAS Tools | Plus de 140 outils en ligne gratuits',h1:'Tous les outils dont vous avez besoin. Au même endroit.',hp:n=>`${n} outils gratuits pour le texte, le code, l’argent, la santé, les maths et plus encore. Tout s’exécute dans votre navigateur : vos données ne quittent jamais votre appareil.`,b1:'Parcourir les outils',b2:'Demander à l’IA',fab:'✦ Demander à l’IA',q:'Rechercher un outil',ai:'Que voulez-vous faire ?',send:'Envoyer',run:'Lancer',copy:'Copier le résultat',copied:'Copié',ph:'Collez ou saisissez ici',res:'Résultats',none:'Aucun outil trouvé.',pop:'Outils populaires',ft:'ELIAS Tools. Gratuit. Les fichiers et textes sont traités sur votre appareil et jamais envoyés. © 2026 Elias Khlifi',hi:'Bonjour ! Dites-moi ce que vous voulez faire et je trouverai le bon outil.',try:'Essayez : ',nm:'Aucun résultat. Essayez un autre mot.',noai:'(Claude AI n’est pas encore connecté. Définissez AI_URL dans index.html.)',err:'Impossible de joindre le service IA.',chk:'Vérifiez vos nombres',er:'Erreur : '},
+ar:{t:'ELIAS Tools | أكثر من 140 أداة مجانية على الإنترنت',h1:'كل الأدوات التي تحتاجها. في مكان واحد.',hp:n=>`${n} أداة مجانية للنصوص والبرمجة والمال والصحة والرياضيات وغيرها. كل شيء يعمل داخل متصفحك، فلا تغادر بياناتك جهازك أبدًا.`,b1:'تصفّح الأدوات',b2:'اسأل الذكاء الاصطناعي',fab:'✦ اسأل الذكاء الاصطناعي',q:'ابحث عن أداة',ai:'ماذا تريد أن تفعل؟',send:'إرسال',run:'تشغيل',copy:'نسخ النتيجة',copied:'تم النسخ',ph:'الصق أو اكتب هنا',res:'النتائج',none:'لم يتم العثور على أدوات.',pop:'الأدوات الشائعة',ft:'ELIAS Tools. مجاني. تتم معالجة الملفات والنصوص على جهازك ولا يتم رفعها أبدًا. © 2026 Elias Khlifi',hi:'مرحبًا! أخبرني ماذا تريد أن تفعل وسأجد لك الأداة المناسبة.',try:'جرّب: ',nm:'لا توجد نتيجة بعد. جرّب كلمة أخرى.',noai:'(Claude AI غير متصل بعد. عيّن AI_URL في index.html.)',err:'تعذّر الوصول إلى خدمة الذكاء الاصطناعي.',chk:'تحقق من الأرقام',er:'خطأ: '}};
+const CT={fr:{Text:'Texte',Developer:'Développeur',Security:'Sécurité',Finance:'Finance',Health:'Santé',Math:'Maths',Converters:'Convertisseurs',Dates:'Dates',Fun:'Jeux'},
+ar:{Text:'نصوص',Developer:'المطوّرون',Security:'الأمان',Finance:'المال',Health:'الصحة',Math:'الرياضيات',Converters:'المحوّلات',Dates:'التواريخ',Fun:'ترفيه'}};
+const NM={fr:{
+Text:['Majuscules','Minuscules','Casse de titre','Casse de phrase','camelCase','snake_case','kebab-case','Slug d’URL','Supprimer les accents','Inverser le texte','Inverser les mots','Compteur de mots','Temps de lecture','Supprimer les doublons','Trier les lignes A-Z','Supprimer les lignes vides','Supprimer les espaces en trop','Numéroter les lignes','Texte en binaire','Binaire en texte','Texte en hexadécimal','Hexadécimal en texte','Texte en codes ASCII','Codes ASCII en texte','Encoder en morse','Décoder le morse','ROT13','Chiffre Atbash','Vérificateur de palindrome','Fréquence des lettres','Fréquence des mots','Extraire les e-mails','Extraire les URL','Extraire les nombres','Supprimer les balises HTML','Lorem ipsum'],
+Developer:['Formateur JSON','Minificateur JSON','Validateur JSON','Échapper une chaîne JSON','Déséchapper une chaîne JSON','Encodeur Base64','Décodeur Base64','Encoder une URL','Décoder une URL','Échapper le HTML','Déséchapper le HTML','Minificateur CSS','Générateur d’UUID','Hachage SHA-256','Hachage SHA-1','Hachage SHA-512','Horodatage en date','Date en horodatage','Horodatage actuel','Testeur de regex','HEX en RVB','RVB en HEX','Décimal en binaire','Binaire en décimal','Décimal en hexadécimal','Hexadécimal en décimal','Nombre en chiffres romains','Chiffres romains en nombre','CSV en JSON','JSON en CSV','Décodeur JWT','Analyseur de paramètres d’URL','Infos du navigateur','Nombre aléatoire'],
+Security:['Générateur de mot de passe','Force du mot de passe','Entropie du mot de passe','Générateur de code PIN','Jeton sécurisé'],
+Finance:['Pourcentage d’un nombre','Variation en pourcentage','A représente quel % de B','Ajouter un pourcentage','Retirer un pourcentage','Prix après remise','TVA et taxes','Calculateur de pourboire','Mensualité de prêt','Intérêts composés','Intérêts simples','Marge bénéficiaire','Majoration','Retour sur investissement','Seuil de rentabilité','Salaire horaire en mensuel','Coût du carburant'],
+Health:['IMC','Calories quotidiennes (hommes)','Calories quotidiennes (femmes)','Eau quotidienne en litres','Fréquence cardiaque max','Allure de course'],
+Math:['Somme de nombres','Moyenne','Médiane','Minimum et maximum','Écart type','Trier des nombres','Aire du cercle','Circonférence du cercle','Aire du triangle','Volume de la sphère','Volume du cylindre','Théorème de Pythagore','Équation du second degré','PGCD','PPCM','Nombre premier ?','Facteurs premiers','Factorielle','Suite de Fibonacci','Logarithme'],
+Converters:['Longueur','Poids','Volume','Surface','Vitesse','Taille des données','Temps','Énergie','Pression','Angle','Celsius en Fahrenheit','Fahrenheit en Celsius','Celsius en Kelvin'],
+Dates:['Calculateur d’âge','Jours avant une date','Jours entre deux dates','Jour de la semaine','Date et heure actuelles'],
+Fun:['Lancer de dé','Pile ou face','Tirage au sort','Couleur aléatoire','Boule magique 8']},
+ar:{
+Text:['أحرف كبيرة','أحرف صغيرة','حالة العنوان','حالة الجملة','camelCase','snake_case','kebab-case','مُعرّف الرابط (Slug)','إزالة العلامات الصوتية','عكس النص','عكس الكلمات','عدّاد الكلمات','وقت القراءة','حذف الأسطر المكررة','ترتيب الأسطر أ-ي','حذف الأسطر الفارغة','حذف المسافات الزائدة','ترقيم الأسطر','نص إلى ثنائي','ثنائي إلى نص','نص إلى سداسي عشري','سداسي عشري إلى نص','نص إلى رموز ASCII','رموز ASCII إلى نص','تشفير مورس','فك تشفير مورس','ROT13','شيفرة أتباش','فاحص الكلمات المتناظرة','تكرار الحروف','تكرار الكلمات','استخراج البريد الإلكتروني','استخراج الروابط','استخراج الأرقام','إزالة وسوم HTML','نص تجريبي Lorem ipsum'],
+Developer:['منسّق JSON','ضغط JSON','مدقّق JSON','تهريب نص JSON','إلغاء تهريب نص JSON','ترميز Base64','فك ترميز Base64','ترميز الرابط','فك ترميز الرابط','تهريب HTML','إلغاء تهريب HTML','ضغط CSS','مولّد UUID','تجزئة SHA-256','تجزئة SHA-1','تجزئة SHA-512','الطابع الزمني إلى تاريخ','التاريخ إلى طابع زمني','الطابع الزمني الحالي','مختبر التعابير النمطية','HEX إلى RGB','RGB إلى HEX','عشري إلى ثنائي','ثنائي إلى عشري','عشري إلى سداسي عشري','سداسي عشري إلى عشري','رقم إلى روماني','روماني إلى رقم','CSV إلى JSON','JSON إلى CSV','فك ترميز JWT','محلّل معاملات الرابط','معلومات المتصفح','رقم عشوائي'],
+Security:['مولّد كلمات المرور','قوة كلمة المرور','إنتروبيا كلمة المرور','مولّد رمز PIN','رمز آمن'],
+Finance:['نسبة مئوية من عدد','نسبة التغيّر','كم نسبة A من B','إضافة نسبة مئوية','طرح نسبة مئوية','السعر بعد الخصم','ضريبة القيمة المضافة','حاسبة البقشيش','قسط القرض','الفائدة المركّبة','الفائدة البسيطة','هامش الربح','نسبة الزيادة على التكلفة','العائد على الاستثمار','نقطة التعادل','الأجر بالساعة إلى شهري','تكلفة الوقود'],
+Health:['مؤشر كتلة الجسم','السعرات اليومية (رجال)','السعرات اليومية (نساء)','الماء اليومي باللتر','أقصى معدل لضربات القلب','وتيرة الجري'],
+Math:['مجموع الأعداد','المتوسط','الوسيط','الأصغر والأكبر','الانحراف المعياري','ترتيب الأعداد','مساحة الدائرة','محيط الدائرة','مساحة المثلث','حجم الكرة','حجم الأسطوانة','نظرية فيثاغورس','حلّ المعادلة التربيعية','القاسم المشترك الأكبر','المضاعف المشترك الأصغر','فاحص الأعداد الأولية','العوامل الأولية','المضروب','متتالية فيبوناتشي','اللوغاريتم'],
+Converters:['الطول','الوزن','الحجم','المساحة','السرعة','حجم البيانات','الوقت','الطاقة','الضغط','الزاوية','سلسيوس إلى فهرنهايت','فهرنهايت إلى سلسيوس','سلسيوس إلى كلفن'],
+Dates:['حاسبة العمر','الأيام المتبقية لتاريخ','الأيام بين تاريخين','يوم الأسبوع','التاريخ والوقت الحاليان'],
+Fun:['رمي النرد','صورة أو كتابة','اختيار عشوائي','لون عشوائي','الكرة السحرية 8']}};
+const U=()=>I[LG],tn=x=>((NM[LG]||{})[x.c.n]||[])[x.i]||x.n,tc=c=>(CT[LG]||{})[c.n]||c.n;
+function sl(l){LG=l;try{localStorage.lg=l}catch(e){}let u=I[l],d=document.documentElement;d.lang=l;d.dir=l=='ar'?'rtl':'ltr';document.title=u.t;lg.value=l;cl();q.value='';
+h1.textContent=u.h1;hp.textContent=u.hp(T.length);b1.textContent=u.b1;b2.textContent=u.b2;fab.textContent=u.fab;q.placeholder=u.q;ai.placeholder=u.ai;bs.textContent=u.send;br.textContent=u.run;bc.textContent=u.copy;ft.textContent=u.ft;
+nav.innerHTML=C.map(c=>`<a onclick="document.getElementById('c-${c.n}').scrollIntoView({behavior:'smooth'})">${tc(c)}</a>`).join('');home()}
+const $=s=>document.querySelector(s),
+cards=a=>a.map(x=>`<button class=card style=--h:${x.c.h} onclick=op(${T.indexOf(x)})><i>${x.c.i}</i>${tn(x)}</button>`).join(''),
+row=(h,id,a)=>`<section class=row id="${id}"><h2>${h}</h2><div class=rail>${cards(a)}</div></section>`,
+P=['Word counter','JSON formatter','Password generator','Percentage of','BMI','Length','Base64 encode','UUID generator','Loan payment','Title Case','Age calculator','SHA-256 hash'];
+function home(){rows.innerHTML=row(U().pop,'pop',P.map(n=>T.find(x=>x.n==n)))+C.map(c=>row(tc(c),'c-'+c.n,T.filter(x=>x.c==c))).join('')}
+C.forEach(c=>T.filter(x=>x.c==c).forEach((x,i)=>x.i=i));let s0;try{s0=localStorage.lg}catch(e){}sl(I[s0]?s0:['fr','ar'].find(l=>navigator.language.startsWith(l))||'en');
+q.oninput=()=>{let s=q.value.toLowerCase().trim();if(!s)return home();rows.innerHTML=`<section class=row style="padding-top:90px"><h2>${U().res}</h2><div class=grid>${cards(T.filter(x=>(x.n+' '+tn(x)+' '+x.c.n+' '+tc(x.c)).toLowerCase().includes(s)))||'<p>'+U().none+'</p>'}</div></section>`};
+onscroll=()=>h.classList.toggle('s',scrollY>40);
+onkeydown=e=>e.key=='Escape'&&cl();
+function op(i){cur=T[i];let s=`<h3>${tn(cur)}</h3>`;
+if(cur.u){let o=Object.keys(cur.u).map(k=>`<option>${k}</option>`).join('');s+=`<input data-i type=number value=1 step=any><select data-i>${o}</select><select data-i>${o}</select>`}
+else if(cur.l)s+=cur.l.map(l=>`<label>${l}<input data-i type=number step=any></label>`).join('');
+else s+=`<textarea data-i dir=auto rows=6 placeholder="${U().ph}"></textarea>`;
+f.innerHTML=s;if(cur.u)f.querySelectorAll('select')[1].selectedIndex=1;out.textContent='';m.classList.add('o');run();(f.querySelector('[data-i]')||{focus(){}}).focus()}
+function cl(){m.classList.remove('o')}
+async function run(){let v=[...f.querySelectorAll('[data-i]')].map(e=>e.value),r;if(v.some(x=>x===''))return out.textContent='';
+try{r=cur.u?v[0]*cur.u[v[1]]/cur.u[v[2]]:await cur.f(...(cur.l?v.map(Number):v));if(typeof r=='number')r=isFinite(r)?+r.toFixed(6):U().chk}catch(e){r=U().er+e.message}out.textContent=r}
+function copy(b){navigator.clipboard.writeText(out.textContent);b.textContent=U().copied;setTimeout(()=>b.textContent=U().copy,1200)}
 
-function open(on) { panel.classList.toggle('on', on); fab.setAttribute('aria-expanded', on); if (on && tab == 'a') inp.focus() }
-fab.onclick = () => open(!panel.classList.contains('on'));
-
-function chrome() {
-  const t = d(); panel.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  title.textContent = t.title; mode.textContent = CFG.ENDPOINT ? t.m1 : t.m0;
-  inp.placeholder = t.ph; send.textContent = t.send; x.setAttribute('aria-label', t.close);
-  lg.replaceChildren(...['en', 'fr', 'ar'].map(k => h('button', { 'aria-pressed': String(k == lang), onclick: () => setLang(k) }, { en: 'EN', fr: 'FR', ar: 'عربي' }[k])));
-  tb.replaceChildren(...[['a', t.tA], ['t', t.tT], ['c', t.tC]].map(([k, l]) => h('button', { 'aria-pressed': String(k == tab), onclick: () => { tab = k; chrome(); view() } }, l)));
-  form.style.display = tab == 'a' ? 'flex' : 'none';
-}
-function setLang(k) { lang = k; try { localStorage.setItem('elias_lang', k) } catch (e) {} translatePage(); chrome(); view() }
-function view() { body.replaceChildren(); tab == 'a' ? chatView() : tab == 't' ? toolsView() : convView() }
-
-/* ---------- Assistant ---------- */
-function say(r, t, btns = []) { const m = h('div', { class: 'm ' + r }, t); btns.forEach(b => m.append(b)); body.append(m); body.scrollTop = 1e9; return m }
-function chatView() { if (!msgs.length) msgs.push({ r: 'a', k: 'hi' }); msgs.forEach(m => say(m.r, m.k ? d()[m.k] : m.t, m.b || [])) }
-const pageItems = () => [...document.querySelectorAll('a,button,h1,h2,h3,h4,label,summary')].filter(e => e.offsetParent && e.textContent.trim().length > 1 && e.textContent.trim().length < 160);
-function flash(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); const o = el.style.outline; el.style.outline = '3px solid #ffd400'; setTimeout(() => el.style.outline = o, 2500) }
-function local(s) {
-  if (/youtube|tiktok|download|télécharg|telecharg|تحميل|تنزيل/i.test(s)) return { k: 'note' };
-  const w = s.toLowerCase().split(/[\s,.;:!?]+/).filter(v => v.length > 2); const seen = new Set(), hits = [];
-  pageItems().forEach(e => { const t = e.textContent.trim().replace(/\s+/g, ' '); if (seen.has(t)) return; if (w.some(v => t.toLowerCase().includes(v))) { seen.add(t); hits.push([t, e]) } });
-  return hits.length ? { t: d().found, b: hits.slice(0, 3).map(([t, e]) => h('button', { class: 'btn', onclick: () => flash(e) }, d().show + ': ' + t.slice(0, 50))) } : { k: 'none' };
-}
-form.onsubmit = async ev => {
-  ev.preventDefault(); const s = inp.value.trim(); if (!s) return; inp.value = '';
-  msgs.push({ r: 'u', t: s }); say('u', s); hist.push({ role: 'user', content: s });
-  const dots = say('a', d().wait); let out = null;
-  const sys = `You are the assistant of ELIAS Tools, a free browser-based toolbox (PDF, image, calculators, developer and security tools; files never leave the user's device). Reply in ${LN[lang]}, in 1 to 4 short plain-text sentences. Page items: ${[...new Set(pageItems().map(e => e.textContent.trim().replace(/\s+/g, ' ')))].slice(0, 40).join(' | ')}. Do not help download YouTube or TikTok videos; explain it breaks their terms and suggest official options.`;
-  if (CFG.ENDPOINT) { try { out = await call(sys, hist.slice(-10)) } catch (e) {} }
-  if (out) { dots.textContent = out; msgs.push({ r: 'a', t: out }); hist.push({ role: 'assistant', content: out }) }
-  else { const l = local(s); dots.remove(); const m = { r: 'a', k: l.k, t: l.t, b: l.b }; msgs.push(m); say('a', l.k ? d()[l.k] : l.t, l.b || []) }
-};
-
-/* ---------- Tools tab ---------- */
-const ytId = u => { try { const l = new URL(u.trim()); const m = l.pathname.match(/\/(?:shorts|embed|live)\/([\w-]{11})/); const id = l.hostname.includes('youtu.be') ? l.pathname.slice(1, 12) : l.searchParams.get('v') || (m && m[1]); return /^[\w-]{11}$/.test(id || '') ? id : null } catch (e) { return null } };
-const ttClean = u => { try { const l = new URL(u.trim()); return /(^|\.)tiktok\.com$/.test(l.hostname) ? l.origin + l.pathname : null } catch (e) { return null } };
-function rowOf(label, val) { const b = h('button', { class: 'btn g' }, d().copy); b.onclick = () => { navigator.clipboard.writeText(val); b.textContent = d().copied }; return h('div', { class: 'rw' }, h('span', {}, label), h('code', {}, val), b) }
-function toolsView() {
-  const t = d();
-  const yi = h('input', { placeholder: t.paste, dir: 'ltr' }), ys = h('input', { type: 'number', min: 0, placeholder: t.at }), yo = h('div', { class: 'out' });
-  const yr = h('button', { class: 'btn', onclick: () => { yo.replaceChildren(); const id = ytId(yi.value); if (!id) return yo.append(h('p', { class: 'bad' }, t.bad)); const s = Math.max(0, +ys.value || 0);
-    yo.append(rowOf(t.id, id), rowOf(t.clean, `https://www.youtube.com/watch?v=${id}${s ? '&t=' + s + 's' : ''}`), rowOf(t.embed, `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}${s ? '?start=' + s : ''}" title="YouTube video" allowfullscreen></iframe>`)) } }, t.run);
-  const ti = h('input', { placeholder: t.paste, dir: 'ltr' }), to = h('div', { class: 'out' });
-  const tr = h('button', { class: 'btn', onclick: () => { to.replaceChildren(); const c = ttClean(ti.value); to.append(c ? rowOf(t.clean, c) : h('p', { class: 'bad' }, t.bad)) } }, t.run);
-  const kind = h('select', {}, ...[['w', t.w], ['s', t.s], ['t', t.t], ['i', t.i]].map(([v, l]) => h('option', { value: v }, l)));
-  const opt = h('select', {}, ...[['YouTube', t.yt], ['TikTok', t.tk]].map(([v, l]) => h('option', { value: v }, l)));
-  const swap = () => { opt.replaceChildren(...(kind.value == 't' ? ['en', 'fr', 'ar'].map(k => h('option', { value: LN[k] }, LN[k])) : [['YouTube', t.yt], ['TikTok', t.tk]].map(([v, l]) => h('option', { value: v }, l)))); opt.style.display = kind.value == 'w' || kind.value == 't' ? '' : 'none' };
-  kind.onchange = swap; const ta = h('textarea', { placeholder: t.inp }), ao = h('div', { class: 'out' });
-  const ar = h('button', { class: 'btn', onclick: async () => {
-    const v = ta.value.trim(); if (!v) return; ao.replaceChildren(h('p', { class: 'note' }, t.wait));
-    const S = { w: `You write social media copy. For a ${opt.value} video, produce 3 catchy titles, one 2-sentence description and 8 relevant hashtags. Reply in ${LN[lang]}.`, s: `Summarize the text in 5 short bullet points. Reply in ${LN[lang]}.`, t: `Translate the text to ${opt.value}. Return only the translation.`, i: 'Improve clarity, grammar and tone while keeping the meaning. Return only the improved text, in the same language as the input.' }[kind.value];
-    try { const o = await call(S, [{ role: 'user', content: v }]); ao.replaceChildren(rowOf(t.run, o)) } catch (e) { ao.replaceChildren(h('p', { class: 'bad' }, e == 'noai' ? t.noai : t.err)) } } }, t.run);
-  swap();
-  body.append(
-    h('div', { class: 'card' }, h('h3', {}, t.ytH), yi, ys, yr, yo),
-    h('div', { class: 'card' }, h('h3', {}, t.ttH), ti, tr, to),
-    h('p', { class: 'note' }, t.note),
-    h('div', { class: 'card' }, h('h3', {}, t.aiH), kind, opt, ta, ar, ao));
-}
-
-/* ---------- File converter (runs 100% in the browser; libraries load from cdnjs on first use) ---------- */
-const LIB = { xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', mam: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js', pdfjs: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js' };
-const loaded = {}; const need = k => loaded[k] || (loaded[k] = new Promise((ok, no) => { const e = document.createElement('script'); e.src = LIB[k]; e.onload = ok; e.onerror = () => no('lib'); document.head.append(e) }));
-const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-async function pdfPages(buf) {
-  await need('pdfjs');
-  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) { const t = await (await fetch('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js')).text(); pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([t], { type: 'text/javascript' })) }
-  const doc = await pdfjsLib.getDocument({ data: buf }).promise, pages = [];
-  for (let i = 1; i <= doc.numPages; i++) {
-    const c = await (await doc.getPage(i)).getTextContent(), rows = [];
-    c.items.filter(t => t.str.trim()).forEach(t => { const y = Math.round(t.transform[5]); let r = rows.find(r => Math.abs(r.y - y) < 3); if (!r) rows.push(r = { y, c: [] }); r.c.push({ x: t.transform[4], s: t.str, w: t.width }) });
-    rows.sort((a, b) => b.y - a.y); rows.forEach(r => r.c.sort((a, b) => a.x - b.x)); pages.push(rows);
-  } return pages;
-}
-function grid(rows) {            // turn positioned text into spreadsheet columns
-  const cells = rows.map(r => { const o = []; r.c.forEach(t => { const l = o[o.length - 1]; if (l && t.x - l.e < 5) { l.s += (t.x - l.e > 1 ? ' ' : '') + t.s; l.e = t.x + t.w } else o.push({ x: t.x, e: t.x + t.w, s: t.s }) }); return o });
-  const xs = [...new Set(cells.flat().map(c => Math.round(c.x)))].sort((a, b) => a - b), cols = [];
-  xs.forEach(v => { if (!cols.length || v - cols[cols.length - 1] > 12) cols.push(v) });
-  return cells.map(r => { const g = Array(cols.length).fill(''); r.forEach(c => { let k = cols.length - 1; while (k > 0 && cols[k] > c.x + 12) k--; g[k] = g[k] ? g[k] + ' ' + c.s : c.s }); return g.map(v => /^-?\d+(\.\d+)?$/.test(v) ? +v : v) });
-}
-function printHtml(html, title) {  // browser "Save as PDF": keeps formatting and supports Arabic
-  const f = h('iframe', { style: 'position:fixed;width:0;height:0;border:0' }); document.body.append(f);
-  const w = f.contentWindow, dc = w.document; dc.open();
-  dc.write(`<!doctype html><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:12pt/1.5 system-ui,Arial,sans-serif;margin:18mm}table{border-collapse:collapse;width:100%;margin-bottom:12px}td,th{border:1px solid #999;padding:4px 6px;font-size:10pt}img{max-width:100%}</style>${html}`); dc.close();
-  setTimeout(() => { w.focus(); w.print(); setTimeout(() => f.remove(), 60000) }, 400);
-}
-function convView() {
-  const t = d(), acc = { x2p: '.xlsx,.xls,.csv', p2x: '.pdf', p2w: '.pdf', w2p: '.docx' };
-  const k = h('select', {}, ...[['x2p', t.f1], ['p2x', t.f2], ['p2w', t.f3], ['w2p', t.f4]].map(([v, l]) => h('option', { value: v }, l)));
-  const f = h('input', { type: 'file' }), s = h('p', { class: 'note' }), a = h('a', { class: 'btn', style: 'display:none;text-align:center;text-decoration:none' }, t.dl);
-  k.onchange = () => { f.accept = acc[k.value]; f.value = ''; a.style.display = 'none'; s.textContent = '' }; k.onchange();
-  const save = (blob, name) => { a.href = URL.createObjectURL(blob); a.download = name; a.style.display = 'block' };
-  const go = h('button', { class: 'btn', onclick: async () => {
-    const file = f.files[0]; if (!file) return; a.style.display = 'none'; s.className = 'note'; s.textContent = t.busy;
-    try {
-      const buf = await file.arrayBuffer(), base = file.name.replace(/\.[^.]+$/, ''), m = k.value;
-      if (m == 'x2p') { await need('xlsx'); const wb = XLSX.read(buf); printHtml(wb.SheetNames.map(n => `<h3>${esc(n)}</h3>` + XLSX.utils.sheet_to_html(wb.Sheets[n], { header: '', footer: '' })).join(''), base); s.textContent = t.print }
-      else if (m == 'w2p') { await need('mam'); printHtml((await mammoth.convertToHtml({ arrayBuffer: buf })).value, base); s.textContent = t.print }
-      else {
-        const pages = await pdfPages(buf); if (!pages.some(p => p.length)) throw 'scan';
-        if (m == 'p2x') { await need('xlsx'); const wb = XLSX.utils.book_new(); pages.forEach((p, i) => XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(grid(p)), 'Page ' + (i + 1))); save(new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/octet-stream' }), base + '.xlsx') }
-        else save(new Blob(['\ufeff<html xmlns:w="urn:schemas-microsoft-com:office:word"><meta charset="utf-8"><body>' + pages.map(p => p.map(r => `<p>${esc(r.c.map(c => c.s).join(' '))}</p>`).join('')).join('<br style="page-break-before:always">') + '</body></html>'], { type: 'application/msword' }), base + '.doc');
-        s.textContent = t.done;
-      }
-    } catch (e) { s.className = 'bad'; s.textContent = e == 'scan' ? t.scan : t.cerr }
-  } }, t.go);
-  body.append(h('div', { class: 'card' }, h('h3', {}, t.cvH), k, f, go, s, a), h('p', { class: 'note' }, t.cn));
-}
-
-chrome(); view(); translatePage();
-window.EliasAddon = { setLang, open, addStrings: a => { PAGE.push(...a); translatePage() } };
-})();
-<meta property="og:title" content="ELIAS Tools">
-<meta property="og:description" content="Free PDF, image, calculator and developer tools.">
-<meta property="og:image" content="https://codebind20.github.io/ilies-tools/logo.png">
-</script>
-</body>
-</html>
+/* AI helper: set AI_URL to your own server endpoint that calls the Claude API (never put an API key in this file). */
+const AI_URL='',H=[];
+function tg(){ap.classList.toggle('o');if(!H.length&&!ml.children.length)say('bot',U().hi)}
+function say(r,x){let p=document.createElement('p');p.className=r;p.textContent=x;ml.append(p);ml.scrollTop=1e9}
+async function send(){let x=ai.value.trim(),r;if(!x)return;ai.value='';say('me',x);H.push({role:'user',content:x});
+try{if(AI_URL){r=(await(await fetch(AI_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({messages:H,lang:LG,tools:T.map(a=>a.n)})})).json()).reply}
+else{let k=x.toLowerCase().match(/[\p{L}\p{N}]{3,}/gu)||[],s=T.filter(a=>k.some(z=>(a.n+' '+tn(a)).toLowerCase().includes(z))).slice(0,6).map(a=>tn(a));r=(s.length?U().try+s.join(', ')+'.':U().nm)+'\n\n'+U().noai}}
+catch(e){r=U().err}H.push({role:'assistant',content:r});say('bot',r)}
+</script></body></html>
