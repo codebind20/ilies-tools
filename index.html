@@ -194,3 +194,48 @@ if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWor
 </script>
 </body>
 </html>
+<script>
+
+// Définir le dataLayer et la fonction gtag.
+
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+
+ 
+// IMPORTANT - NE PAS COPIER/COLLER SANS MODIFIER LA LISTE DES RÉGIONS
+
+// Définir le consentement par défaut pour des régions spécifiques en fonction de vos besoins
+
+gtag('consent', 'default', {
+
+  'ad_storage': 'denied',
+
+  'ad_user_data': 'denied',
+
+  'ad_personalization': 'denied',
+
+  'analytics_storage': 'denied',
+
+ 'regions':[<list of ISO 3166-2 region codes>]
+
+});
+
+// Définir le consentement par défaut pour toutes les autres régions en fonction de vos besoins
+
+gtag('consent', 'default', {
+
+  'ad_storage': 'granted',
+
+  'ad_user_data': 'granted',
+
+  'ad_personalization': 'granted',
+
+  'analytics_storage': 'granted'
+
+});
+
+ 
+</script>
+
+<!--Banner script here!-->
