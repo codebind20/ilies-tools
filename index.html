@@ -19,3 +19,186 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .logo{font-weight:700;font-size:20px;display:flex;gap:10px;align-items:center}
 .logo i{width:30px;height:30px;background:var(--y);color:var(--ink);display:grid;place-items:center;border-radius:6px;font:700 16px 'JetBrains Mono',monospace}
 .btn{background:var(--y);color:var(--ink);border:0;padding:10px 16px;border-radius:6px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.g{background:none;color:var(--tx);border:1px solid var(--ln)}
+.btn:hover{filter:brightness(1.1)}
+.hero{position:relative;padding:clamp(48px,9vw,110px) var(--pad) 56px;overflow:hidden;--mx:75%;--my:30%}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(var(--ln) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,var(--ln) 1px,transparent 1px) 0 0/44px 44px;-webkit-mask:radial-gradient(380px circle at var(--mx) var(--my),#000,transparent);mask:radial-gradient(380px circle at var(--mx) var(--my),#000,transparent)}
+.hero>*{position:relative}
+h1{font-size:clamp(40px,7vw,88px);line-height:1;letter-spacing:-.035em;max-width:15ch}
+.sub{color:var(--mu);max-width:56ch;margin-top:20px;font-size:18px}
+.cmd{display:flex;align-items:center;gap:12px;margin-top:32px;max-width:660px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:5px 10px 5px 16px;box-shadow:0 0 0 0 rgba(255,212,0,.0);transition:box-shadow .2s,border-color .2s}
+.cmd:focus-within{border-color:var(--y);box-shadow:0 0 40px rgba(255,212,0,.18)}
+.cmd input{flex:1;background:none;border:0;outline:0;padding:12px 0;font-size:18px;min-width:0}
+kbd{border:1px solid var(--ln);border-radius:4px;padding:0 7px;color:var(--mu);font:12px 'JetBrains Mono',monospace}
+.meta{color:var(--mu);margin-top:16px;font-size:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;padding:8px var(--pad) 20px}
+.tabs button{background:none;border:1px solid var(--ln);border-radius:99px;padding:6px 15px;cursor:pointer;color:var(--mu)}
+.tabs [aria-pressed=true]{background:var(--tx);color:var(--ink);border-color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--ln);border:1px solid var(--ln);margin:0 var(--pad)}
+.t{background:var(--ink);text-align:left;padding:22px;border:0;cursor:pointer;display:grid;gap:8px;align-content:start;min-height:170px}
+.t:hover{background:var(--sf)}
+.t b{font-size:18px}.t span{color:var(--mu);font-size:14px}
+.gl{font:600 15px 'JetBrains Mono',monospace;color:var(--y);border:1px solid var(--ln);width:44px;height:44px;display:grid;place-items:center;border-radius:6px;margin-bottom:6px;transition:.15s}
+.t:hover .gl{background:var(--y);color:var(--ink)}
+#none{padding:40px var(--pad);color:var(--mu)}
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding:72px var(--pad)}
+.trust p{color:var(--mu);font-size:15px}.trust h2{font-size:20px;margin-bottom:6px}
+footer{padding:28px var(--pad) 90px;border-top:1px solid var(--ln);color:var(--mu);font-size:14px}
+dialog{margin:auto;width:min(720px,94vw);max-height:90vh;overflow:auto;background:var(--sf);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:0}
+dialog::backdrop{background:rgba(5,8,30,.78);backdrop-filter:blur(4px)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--sf)}
+.dh h2{font-size:20px}
+#tp{padding:20px;display:grid;gap:14px}
+textarea,input[type=text],input[type=number],input[type=file],select{width:100%;background:var(--ink);border:1px solid var(--ln);border-radius:6px;padding:10px;font:14px 'JetBrains Mono',monospace}
+textarea{min-height:130px;resize:vertical}
+input[type=range]{flex:1;accent-color:var(--y)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>input,.row>select{flex:1;min-width:90px;width:auto}
+.big{font:600 18px/1.4 'JetBrains Mono',monospace;word-break:break-all;background:var(--ink);padding:14px;border-radius:6px;border:1px solid var(--ln);min-height:50px}
+.st{color:var(--mu);font-size:14px;min-height:1.4em}.st.bad{color:#ff9b9b}
+#fab{position:fixed;right:16px;bottom:16px;z-index:9;box-shadow:0 8px 30px rgba(0,0,0,.4);padding:13px 18px;border-radius:99px}
+#ch{position:fixed;right:16px;bottom:72px;width:min(390px,calc(100vw - 32px));height:min(540px,72vh);background:var(--sf);border:1px solid var(--ln);border-radius:14px;display:none;flex-direction:column;z-index:9;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#ch.on{display:flex}
+#ch header{position:static;padding:12px 14px;background:none;border-radius:14px 14px 0 0}
+#ch small{color:var(--mu);display:block;font-size:12px}
+#ms{flex:1;overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
+.m{padding:10px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap;font-size:15px}
+.m.u{background:var(--b);justify-self:end}.m.a{background:var(--ink);border:1px solid var(--ln)}
+.m .btn{margin-top:8px;padding:6px 12px;font-size:14px;display:block;width:fit-content}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 8px}
+.chips button{background:none;border:1px solid var(--ln);border-radius:99px;padding:4px 11px;font-size:13px;color:var(--mu);cursor:pointer}
+#cf{display:flex;gap:8px;padding:12px;border-top:1px solid var(--ln)}
+#cf input{flex:1;background:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:10px;min-width:0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i>E/</i>ELIAS Tools</div>
+  <button class="btn g" id="askTop">Ask the assistant</button>
+</header>
+
+<section class="hero" id="hero">
+  <h1>Every tool you need, in one place.</h1>
+  <p class="sub">PDF, image, calculator, developer and security tools. Everything runs in your browser, so your files never leave your device.</p>
+  <label class="cmd"><input id="sq" type="search" placeholder="Find a tool: merge pdf, password, json…" autocomplete="off" aria-label="Find tool"><kbd>/</kbd></label>
+  <p class="meta" id="meta"></p>
+</section>
+
+<nav class="tabs" id="tabs" aria-label="Categories"></nav>
+<main><div class="grid" id="grid"></div><p id="none" hidden></p></main>
+
+<section class="trust">
+  <div><h2>Private by design</h2><p>Files are processed on your device and never uploaded. Close the tab and everything is gone.</p></div>
+  <div><h2>Fast, no sign-up</h2><p>Open a tool and use it. No account, no watermark, no limits.</p></div>
+  <div><h2>Assistant included</h2><p>Describe what you want to do and the assistant opens the right tool and explains the result.</p></div>
+</section>
+<footer>ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi</footer>
+
+<dialog id="dlg"><div class="dh"><h2 id="dt"></h2><button class="btn g" id="x">Close</button></div><div id="tp"></div></dialog>
+
+<button class="btn" id="fab" aria-expanded="false" aria-controls="ch">Ask AI</button>
+<aside id="ch" aria-label="Assistant">
+  <header><div><b>Assistant</b><small id="mode"></small></div><button class="btn g" id="cx" aria-label="Close assistant">✕</button></header>
+  <div id="ms" aria-live="polite"></div>
+  <div class="chips" id="chips"></div>
+  <form id="cf"><input id="ci" placeholder="What do you want to do?" autocomplete="off" aria-label="Message"><button class="btn">Send</button></form>
+</aside>
+
+<script>
+/* ============ CLAUDE SETUP ============
+   Never put an Anthropic API key in this file. Deploy a tiny proxy (Cloudflare Worker, Vercel, Netlify)
+   that holds the key, calls https://api.anthropic.com/v1/messages with model "claude-sonnet-4-6",
+   and returns JSON {"text": "..."}. Paste its URL below. Empty = built-in offline helper. */
+const ENDPOINT='';
+/* ====================================== */
+const $=s=>document.querySelector(s),q=(e,s)=>e.querySelector(s);
+const st=(e,t,bad)=>{const p=q(e,'.st');p.textContent=t;p.className='st'+(bad?' bad':'')};
+const load=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.append(s)});
+const U={Length:{m:1,km:1e3,cm:.01,mi:1609.344,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495},Temperature:{'°C':1,'°F':1,K:1}};
+const T=[
+{id:'pdf',n:'Merge PDFs',c:'Files',g:'PDF',k:'combine join pdf documents',d:'Combine several PDF files into one, in the order you choose.',r:e=>{
+ e.innerHTML=`<input id=f type=file accept=application/pdf multiple><div class=big>Choose two or more PDFs, in the order you want them.</div><div class=row><button class=btn id=g>Merge PDFs</button><a class="btn g" id=d hidden download=merged.pdf>Download</a></div><p class=st></p>`;
+ q(e,'#g').onclick=async()=>{const fs=[...q(e,'#f').files];if(fs.length<2)return st(e,'Select at least two PDF files.',1);
+  try{st(e,'Merging…');if(!window.PDFLib)await load('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+  const m=await PDFLib.PDFDocument.create();for(const f of fs){const d=await PDFLib.PDFDocument.load(await f.arrayBuffer());(await m.copyPages(d,d.getPageIndices())).forEach(p=>m.addPage(p))}
+  const a=q(e,'#d');a.href=URL.createObjectURL(new Blob([await m.save()],{type:'application/pdf'}));a.hidden=false;st(e,`Merged ${fs.length} files. Nothing was uploaded.`)}
+  catch(x){st(e,'Could not merge. A file may be encrypted or damaged.',1)}}}},
+{id:'image',n:'Image compressor',c:'Files',g:'IMG',k:'compress resize photo jpg png webp smaller',d:'Shrink photos to JPEG or WebP with a quality slider.',r:e=>{
+ e.innerHTML=`<input id=f type=file accept="image/*"><div class=row><span>Quality <b id=l>70</b>%</span><input id=n type=range min=10 max=95 value=70><select id=t><option value=image/jpeg>JPEG<option value=image/webp>WebP</select></div><div class=big id=o>Choose an image.</div><a class=btn id=d hidden>Download</a><p class=st></p>`;
+ e.oninput=async()=>{const f=q(e,'#f').files[0];q(e,'#l').textContent=q(e,'#n').value;if(!f)return;
+  try{const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;c.getContext('2d').drawImage(b,0,0);const t=q(e,'#t').value;
+  c.toBlob(bl=>{const d=q(e,'#d');d.href=URL.createObjectURL(bl);d.download='compressed.'+(t.endsWith('webp')?'webp':'jpg');d.hidden=false;q(e,'#o').textContent=`${(f.size/1024).toFixed(0)} KB → ${(bl.size/1024).toFixed(0)} KB (${Math.round(100-bl.size/f.size*100)}% smaller)`},t,q(e,'#n').value/100)}
+  catch(x){st(e,'This file is not a supported image.',1)}}}},
+{id:'json',n:'JSON formatter',c:'Developer',g:'{ }',k:'json validate minify beautify pretty',d:'Format, minify and validate JSON with clear error messages.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Paste JSON here"></textarea><div class=row><button class=btn data-a=f>Format</button><button class="btn g" data-a=m>Minify</button></div><textarea id=o readonly></textarea><p class=st></p>`;
+ e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;try{q(e,'#o').value=JSON.stringify(JSON.parse(q(e,'#i').value),null,a=='f'?2:0);st(e,'Valid JSON')}catch(x){st(e,x.message,1)}}}},
+{id:'b64',n:'Base64 encoder',c:'Developer',g:'64',k:'base64 encode decode text',d:'Encode text to Base64 or decode it back, with full Unicode support.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Text or Base64"></textarea><div class=row><button class=btn data-a=e>Encode</button><button class="btn g" data-a=d>Decode</button></div><textarea id=o readonly></textarea><p class=st></p>`;
+ e.onclick=ev=>{const a=ev.target.dataset.a;if(!a)return;const v=q(e,'#i').value;try{q(e,'#o').value=a=='e'?btoa(String.fromCharCode(...new TextEncoder().encode(v))):new TextDecoder().decode(Uint8Array.from(atob(v.trim()),c=>c.charCodeAt(0)));st(e,'Done')}catch(x){st(e,'This is not valid Base64.',1)}}}},
+{id:'qr',n:'QR code maker',c:'Developer',g:'QR',k:'qr code link generator',d:'Turn any link or text into a QR code you can save.',r:e=>{
+ e.innerHTML=`<input type=text id=i value="https://codebind20.github.io/ilies-tools/" aria-label="Text or link"><div id=o style="background:#fff;padding:10px;width:fit-content;border-radius:6px"></div><p class=st>Right-click or long-press the code to save it.</p>`;
+ const go=async()=>{try{if(!window.QRCode)await load('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');const o=q(e,'#o');o.innerHTML='';new QRCode(o,{text:q(e,'#i').value||' ',width:220,height:220,colorDark:'#0A1030',colorLight:'#ffffff'})}catch(x){st(e,'Could not load the QR library. Check your connection.',1)}};e.oninput=go;go()}},
+{id:'pass',n:'Password generator',c:'Security',g:'***',k:'password random secure strong',d:'Create strong random passwords. Generated locally with your browser\'s crypto.',o:'#o',r:e=>{
+ e.innerHTML=`<div class=big id=o></div><div class=row><span>Length <b id=l></b></span><input id=n type=range min=8 max=64 value=20></div><div class=row><label><input type=checkbox id=u checked> Uppercase</label><label><input type=checkbox id=w checked> Numbers</label><label><input type=checkbox id=y checked> Symbols</label></div><button class=btn id=g>Generate again</button><p class=st></p>`;
+ const go=()=>{let p='abcdefghijklmnopqrstuvwxyz';if(q(e,'#u').checked)p+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(q(e,'#w').checked)p+='0123456789';if(q(e,'#y').checked)p+='!@#$%^&*()-_=+[]{};:,.?';
+  const n=+q(e,'#n').value,a=new Uint32Array(n);crypto.getRandomValues(a);q(e,'#o').textContent=[...a].map(x=>p[x%p.length]).join('');q(e,'#l').textContent=n;const b=Math.round(n*Math.log2(p.length));st(e,`${b} bits of entropy: ${b<60?'weak':b<90?'good':'strong'}`)};
+ e.oninput=go;q(e,'#g').onclick=go;go()}},
+{id:'hash',n:'Hash generator',c:'Security',g:'#',k:'sha checksum digest sha256 hash',d:'SHA-1, SHA-256 and SHA-512 hashes of any text.',o:'#o',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Type or paste text"></textarea><select id=a><option>SHA-256<option>SHA-1<option>SHA-512</select><div class=big id=o></div><p class=st></p>`;
+ const go=async()=>{const h=await crypto.subtle.digest(q(e,'#a').value,new TextEncoder().encode(q(e,'#i').value));q(e,'#o').textContent=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('')};e.oninput=go;go()}},
+{id:'units',n:'Unit converter',c:'Calculate',g:'⇄',k:'convert length weight temperature km miles kg lb celsius fahrenheit',d:'Convert length, weight and temperature instantly.',o:'#o',r:e=>{
+ e.innerHTML=`<select id=c>${Object.keys(U).map(c=>`<option>${c}`).join('')}</select><div class=row><input id=v type=number value=1 step=any><select id=f></select><select id=t></select></div><div class=big id=o></div><p class=st></p>`;
+ const go=()=>{const c=q(e,'#c').value,v=+q(e,'#v').value,f=q(e,'#f').value,t=q(e,'#t').value;let r;
+  if(c=='Temperature'){const k=f=='°C'?v+273.15:f=='°F'?(v-32)*5/9+273.15:v;r=t=='°C'?k-273.15:t=='°F'?(k-273.15)*9/5+32:k}else r=v*U[c][f]/U[c][t];q(e,'#o').textContent=+r.toPrecision(10)+' '+t};
+ const fill=()=>{const u=Object.keys(U[q(e,'#c').value]).map(x=>`<option>${x}`).join('');q(e,'#f').innerHTML=q(e,'#t').innerHTML=u;q(e,'#t').selectedIndex=1;go()};
+ e.oninput=go;q(e,'#c').onchange=fill;fill()}},
+{id:'calc',n:'Percentage and loan calculator',c:'Calculate',g:'%',k:'percent percentage loan payment interest mortgage calculator',d:'Work out percentages and monthly loan payments.',o:'#o',r:e=>{
+ e.innerHTML=`<b>Percentage</b><div class=row><input id=p type=number value=15 step=any><span>% of</span><input id=b type=number value=240 step=any></div><div class=big id=o1></div><b>Loan payment</b><div class=row><input id=a type=number value=20000 aria-label=Amount><input id=r type=number value=7.5 step=any aria-label="Rate %"><input id=y type=number value=5 aria-label=Years></div><div class=big id=o></div><p class=st>Fields: amount, yearly rate %, years.</p>`;
+ const go=()=>{const v=s=>+q(e,s).value;q(e,'#o1').textContent=+(v('#p')*v('#b')/100).toPrecision(10);const n=v('#y')*12,i=v('#r')/1200,a=v('#a'),m=i?a*i/(1-Math.pow(1+i,-n)):a/n;
+  q(e,'#o').textContent=isFinite(m)?`${m.toFixed(2)} per month · ${(m*n-a).toFixed(2)} total interest`:'Enter amount, rate and years.'};e.oninput=go;go()}},
+{id:'words',n:'Word counter',c:'Text',g:'Aa',k:'words characters count reading time text',d:'Count words, characters and sentences, and estimate reading time.',r:e=>{
+ e.innerHTML=`<textarea id=i placeholder="Paste your text"></textarea><div class=big id=o></div><p class=st></p>`;
+ const go=()=>{const v=q(e,'#i').value,t=v.trim(),w=t?t.split(/\s+/).length:0;q(e,'#o').textContent=`${w} words · ${v.length} characters · ${t?t.split(/[.!?]+(\s|$)/).filter(s=>s&&s.trim()).length:0} sentences · ${w?Math.max(1,Math.round(w/220)):0} min read`};e.oninput=go;go()}}
+];
+const cats=['All',...new Set(T.map(t=>t.c))];let cat='All';
+const dlg=$('#dlg'),tp=$('#tp');
+
+function match(t,s){s=s.toLowerCase().trim();return !s||s.split(/\s+/).every(w=>(t.n+' '+t.d+' '+t.k+' '+t.c).toLowerCase().includes(w))}
+function draw(){const s=$('#sq').value,list=T.filter(t=>(cat=='All'||t.c==cat)&&match(t,s));
+ $('#grid').innerHTML=list.map(t=>`<button class=t data-id=${t.id}><span class=gl>${t.g}</span><b>${t.n}</b><span>${t.d}</span></button>`).join('');
+ $('#grid').hidden=!list.length;const n=$('#none');n.hidden=!!list.length;n.innerHTML=`No tool matches "<span id=nq></span>". `;$('#nq').textContent=s;
+ const b=document.createElement('button');b.className='btn g';b.textContent='Ask the assistant';b.onclick=()=>{chat(true);ask(s)};n.append(b);
+ $('#tabs').innerHTML=cats.map(c=>`<button aria-pressed=${c==cat} data-c="${c}">${c}</button>`).join('');return list}
+function openTool(id){const t=T.find(x=>x.id==id);if(!t)return;$('#dt').textContent=t.n;tp.onclick=tp.oninput=null;tp.innerHTML='';t.r(tp);
+ if(t.o){const b=document.createElement('button');b.className='btn g';b.textContent='Copy result';b.onclick=()=>{const x=q(tp,t.o);navigator.clipboard.writeText(x.value??x.textContent);st(tp,'Copied to clipboard')};q(tp,'.st').before(b)}
+ if(!dlg.open)dlg.showModal();history.replaceState(null,'','#'+id)}
+$('#grid').onclick=e=>{const b=e.target.closest('.t');if(b)openTool(b.dataset.id)};
+$('#tabs').onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
+$('#sq').oninput=draw;
+$('#sq').onkeydown=e=>{if(e.key=='Enter'){const l=draw();l.length?openTool(l[0].id):$('#sq').value&&(chat(true),ask($('#sq').value))}};
+$('#x').onclick=()=>dlg.close();dlg.onclose=()=>history.replaceState(null,'',location.pathname);
+dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.key=='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&k=='k')){e.preventDefault();dlg.close();$('#sq').focus()}});
+$('#hero').onpointermove=e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',e.clientX-r.left+'px');e.currentTarget.style.setProperty('--my',e.clientY-r.top+'px')};
+$('#meta').textContent=`${T.length} tools · 0 uploads · works offline once loaded`;
+
+/* ---------- Assistant ---------- */
+const SYS=`You are the assistant of ELIAS Tools, a free browser-based toolbox. All processing happens locally; never ask users to paste private data. Reply in the user's language, in 1 to 4 short sentences, plain text. Available tools (id: purpose): ${T.map(t=>t.id+': '+t.n+' - '+t.d).join(' | ')}. When a tool fits, end your reply with [[open:id]]. If nothing fits, say so and suggest the closest tool or explain the concept briefly.`;
+const hist=[];
+function chat(on){$('#ch').classList.toggle('on',on);$('#fab').setAttribute('aria-expanded',on);if(on){$('#ci').focus();if(!$('#ms').children.length)say('a',`Hi, I'm the ELIAS assistant. Tell me what you want to do and I'll open the right tool.`)}}
+function say(r,t){const d=document.createElement('div');d.className='m '+r;$('#ms').append(d);fill(d,t);return d}
+function fill(d,t){d.textContent=t.replace(/\[\[open:(\w+)\]\]/g,'').trim();[...t.matchAll(/\[\[open:(\w+)\]\]/g)].forEach(m=>{const x=T.find(k=>k.id==m[1]);if(x){const b=document.createElement('button');b.className='btn';b.textContent='Open '+x.n;b.onclick=()=>openTool(x.id);d.append(b)}});$('#ms').scrollTop=1e9}
+function local(s){const w=s.toLowerCase().split(/\W+/).filter(x=>x.length>2);const sc=T.map(t=>({t,s:w.filter(x=>(t.n+' '+t.d+' '+t.k).toLowerCase().includes(x)).length})).filter(x=>x.s).sort((a,b)=>b.s-a.s);
+ return sc.length?`${sc[0].t.n} should do it: ${sc[0].t.d}${sc[1]?` You could also try ${sc[1].t.n}.`:''} [[open:${sc[0].t.id}]]`:`I couldn't match that to a tool. Try words like "merge PDF", "password", "JSON", "convert km to miles" or "QR code".`}
+async function ask(s){s=s.trim();if(!s)return;say('u',s);hist.push({role:'user',content:s});const d=say('a','Thinking…');let out=null;
+ if(ENDPOINT){try{const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,messages:hist.slice(-10)})});const j=await r.json();out=j.text||(j.content||[]).map(c=>c.text||'').join('')}catch(e){}}
+ out=out||local(s);hist.push({role:'assistant',content:out});d.textContent='';fill(d,out)}
+$('#cf').onsubmit=e=>{e.preventDefault();const i=$('#ci');ask(i.value);i.value=''};
+$('#fab').onclick=()=>chat(!$('#ch').classList.contains('on'));$('#cx').onclick=()=>chat(false);$('#askTop').onclick=()=>chat(true);
+$('#mode').textContent=ENDPOINT?'Powered by Claude':'Offline helper. Add your Claude endpoint to enable full AI.';
+$('#chips').innerHTML=['Merge two PDFs','Make a strong password','Is my JSON valid?'].map(t=>`<button>${t}</button>`).join('');
+$('#chips').onclick=e=>{if(e.target.tagName=='BUTTON')ask(e.target.textContent)};
+draw();if(location.hash)openTool(location.hash.slice(1));
+</script>
+</body>
+</html>
