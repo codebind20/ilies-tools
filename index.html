@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -240,6 +240,17 @@ gtag('consent', 'default', {
 
 <!--Banner script here!-->
 <!-- Google tag (gtag.js) -->
+(() => {
+const CFG = { ENDPOINT: '', RTL_PAGE: false };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
+
+/* ---------- Translations of YOUR existing page text (exact-match). Add your own tool names here. ---------- */
+const PAGE = [
+ { en:'Every tool you need, in one place.', fr:'Tous les outils dont vous avez besoin, au même endroit.', ar:'كل الأدوات التي تحتاجها في مكان واحد.' },
+ { en:'PDF, image, calculator, developer and security tools. Everything runs in your browser, so your files never leave your device.', fr:"Outils PDF, image, calculatrice, développeur et sécurité. Tout s'exécute dans votre navigateur : vos fichiers ne quittent jamais votre appareil.", ar:'أدوات PDF والصور والحاسبة والمطورين والأمان. كل شيء يعمل داخل متصفحك، فلا تغادر ملفاتك جهازك أبداً.' },
+ { en:'Find tool', fr:'Trouver un outil', ar:'ابحث عن أداة' },
+ { en:'Run again', fr:'Relancer', ar:'تشغيل مجدداً' },
+ { en:'Copy result', fr:'Copier le résultat', ar:'نسخ النتيجة' },
+ { en:'ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi', fr:'ELIAS Tools. Gratuit. Les fichiers sont traités sur votre appareil et jamais envoyés. © 2026 Elias Khlifi', ar:'ELIAS Tools. مجاني. تتم معالجة الملفات على جهازك ولا يتم رفعها أبداً. © 2026 Elias Khlifi' }
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-P9V90LZRQY"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
