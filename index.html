@@ -192,7 +192,247 @@ function local(s){const w=s.toLowerCase().split(/\W+/).filter(x=>x.length>2);con
  return sc.length?`${sc[0].t.n} should do it: ${sc[0].t.d}${sc[1]?` You could also try ${sc[1].t.n}.`:''} [[open:${sc[0].t.id}]]`:`I couldn't match that to a tool. Try words like "merge PDF", "password", "JSON", "convert km to miles" or "QR code".`}
 async function ask(s){s=s.trim();if(!s)return;say('u',s);hist.push({role:'user',content:s});const d=say('a','Thinking…');let out=null;
  if(ENDPOINT){try{const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,messages:hist.slice(-10)})});const j=await r.json();out=j.text||(j.content||[]).map(c=>c.text||'').join('')}catch(e){}}
- out=out||local(s);hist.push({role:'assistant',content:out});d.textContent='';fill(d,out)}
+ out=out||local(s);hist.push({role:'assistant',content:out});d.textContent='';fill(d,out)}(() => {
+const CFG = { ENDPOINT: '', RTL_PAGE: false };   // RTL_PAGE:true also flips the whole page to right-to-left in Arabic
+
+/* ---------- Translations of YOUR existing page text (exact-match). Add your own tool names here. ---------- */
+const PAGE = [
+ { en:'Every tool you need, in one place.', fr:'Tous les outils dont vous avez besoin, au même endroit.', ar:'كل الأدوات التي تحتاجها في مكان واحد.' },
+ { en:'PDF, image, calculator, developer and security tools. Everything runs in your browser, so your files never leave your device.', fr:"Outils PDF, image, calculatrice, développeur et sécurité. Tout s'exécute dans votre navigateur : vos fichiers ne quittent jamais votre appareil.", ar:'أدوات PDF والصور والحاسبة والمطورين والأمان. كل شيء يعمل داخل متصفحك، فلا تغادر ملفاتك جهازك أبداً.' },
+ { en:'Find tool', fr:'Trouver un outil', ar:'ابحث عن أداة' },
+ { en:'Run again', fr:'Relancer', ar:'تشغيل مجدداً' },
+ { en:'Copy result', fr:'Copier le résultat', ar:'نسخ النتيجة' },
+ { en:'ELIAS Tools. Free to use. Files are processed on your device and never uploaded. © 2026 Elias Khlifi', fr:'ELIAS Tools. Gratuit. Les fichiers sont traités sur votre appareil et jamais envoyés. © 2026 Elias Khlifi', ar:'ELIAS Tools. مجاني. تتم معالجة الملفات على جهازك ولا يتم رفعها أبداً. © 2026 Elias Khlifi' },
+ {en:'Merge PDF',fr:'Fusionner des PDF',ar:'دمج ملفات PDF'},{en:'Merge PDFs',fr:'Fusionner des PDF',ar:'دمج ملفات PDF'},{en:'Split PDF',fr:'Diviser un PDF',ar:'تقسيم ملف PDF'},
+ {en:'Compress PDF',fr:'Compresser un PDF',ar:'ضغط ملف PDF'},{en:'Compress image',fr:"Compresser l'image",ar:'ضغط الصورة'},{en:'Resize image',fr:"Redimensionner l'image",ar:'تغيير حجم الصورة'},
+ {en:'JSON formatter',fr:'Formateur JSON',ar:'منسّق JSON'},{en:'Password generator',fr:'Générateur de mots de passe',ar:'مولّد كلمات المرور'},
+ {en:'QR code generator',fr:'Générateur de QR code',ar:'مولّد رمز QR'},{en:'Word counter',fr:'Compteur de mots',ar:'عدّاد الكلمات'},
+ {en:'Unit converter',fr:"Convertisseur d'unités",ar:'محوّل الوحدات'},{en:'Calculator',fr:'Calculatrice',ar:'الحاسبة'},
+ {en:'Download',fr:'Télécharger',ar:'تنزيل'},{en:'Upload',fr:'Téléverser',ar:'رفع'},{en:'Clear',fr:'Effacer',ar:'مسح'},{en:'Copy',fr:'Copier',ar:'نسخ'},
+ {en:'PDF tools',fr:'Outils PDF',ar:'أدوات PDF'},{en:'Image tools',fr:'Outils image',ar:'أدوات الصور'},{en:'Developer tools',fr:'Outils développeur',ar:'أدوات المطورين'},
+ {en:'Security tools',fr:'Outils de sécurité',ar:'أدوات الأمان'},{en:'Calculators',fr:'Calculatrices',ar:'الحاسبات'},{en:'Converters',fr:'Convertisseurs',ar:'المحوّلات'}
+];
+
+/* ---------- Add-on interface texts ---------- */
+const L = {
+ en:{ title:'Assistant', tA:'Assistant', tT:'Tools', ph:'Ask anything…', send:'Send',
+  hi:'Hi! Ask me about the tools on this page, or open the Tools tab for link helpers and AI tools.',
+  m0:'Offline helper. Add your Claude endpoint to enable full AI.', m1:'Powered by Claude',
+  ytH:'YouTube link helper', ttH:'TikTok link cleaner', aiH:'AI tools', paste:'Paste a link', run:'Run', copy:'Copy', copied:'Copied',
+  bad:'This is not a valid link.', id:'Video ID', clean:'Clean link', embed:'Embed code', at:'Start at (seconds)',
+  note:"Video downloading is not offered here: it goes against YouTube and TikTok terms and can infringe creators' rights. Use YouTube Premium offline mode, or the Save option TikTok shows on videos whose owners allow it.",
+  noai:'AI is not connected yet. Set your Claude endpoint in elias-addon.js to enable it.',
+  w:'Social post writer', s:'Summarizer', t:'Translator', i:'Text improver', yt:'YouTube', tk:'TikTok', to:'Translate to', inp:'Your text or topic',
+  wait:'Thinking…', none:'I could not find that on this page. Try other words, or open the Tools tab.', found:'Here is what I found on this page:', show:'Show', err:'Something went wrong. Try again.', tC:'Convert', cvH:'File converter', f1:'Excel to PDF', f2:'PDF to Excel', f3:'PDF to Word', f4:'Word to PDF', go:'Convert', dl:'Download', busy:'Converting…', print:'The print window opened. Choose "Save as PDF" as the printer.', done:'Done. Your file is ready.', scan:'No text found. Scanned PDFs need OCR.', cerr:'Could not convert this file. Check the file type and try again.', cn:'Files stay on your device. PDF conversions work on PDFs with real text; layout and images may differ.', close:'Close' },
+ fr:{ title:'Assistant', tA:'Assistant', tT:'Outils', ph:'Posez votre question…', send:'Envoyer',
+  hi:"Bonjour ! Posez-moi vos questions sur les outils de cette page, ou ouvrez l'onglet Outils pour les aides aux liens et les outils IA.",
+  m0:"Assistant hors ligne. Ajoutez votre point d'accès Claude pour activer l'IA complète.", m1:'Propulsé par Claude',
+  ytH:'Aide pour liens YouTube', ttH:'Nettoyeur de liens TikTok', aiH:'Outils IA', paste:'Collez un lien', run:'Lancer', copy:'Copier', copied:'Copié',
+  bad:"Ce lien n'est pas valide.", id:'ID de la vidéo', clean:'Lien propre', embed:"Code d'intégration", at:'Début à (secondes)',
+  note:"Le téléchargement de vidéos n'est pas proposé ici : il enfreint les conditions de YouTube et TikTok et peut porter atteinte aux droits des créateurs. Utilisez le mode hors ligne de YouTube Premium, ou l'option Enregistrer de TikTok sur les vidéos dont l'auteur l'autorise.",
+  noai:"L'IA n'est pas encore connectée. Renseignez votre point d'accès Claude dans elias-addon.js pour l'activer.",
+  w:'Rédacteur de posts', s:'Résumeur', t:'Traducteur', i:'Amélioration de texte', yt:'YouTube', tk:'TikTok', to:'Traduire en', inp:'Votre texte ou sujet',
+  wait:'Réflexion…', none:"Je n'ai rien trouvé sur cette page. Essayez d'autres mots ou ouvrez l'onglet Outils.", found:"Voici ce que j'ai trouvé sur cette page :", show:'Afficher', err:'Une erreur est survenue. Réessayez.', tC:'Convertir', cvH:'Convertisseur de fichiers', f1:'Excel vers PDF', f2:'PDF vers Excel', f3:'PDF vers Word', f4:'Word vers PDF', go:'Convertir', dl:'Télécharger', busy:'Conversion…', print:"La fenêtre d'impression est ouverte. Choisissez « Enregistrer au format PDF ».", done:'Terminé. Votre fichier est prêt.', scan:'Aucun texte trouvé. Les PDF scannés nécessitent une OCR.', cerr:'Conversion impossible. Vérifiez le type de fichier et réessayez.', cn:'Les fichiers restent sur votre appareil. Les conversions PDF fonctionnent sur les PDF contenant du vrai texte ; la mise en page et les images peuvent différer.', close:'Fermer' },
+ ar:{ title:'المساعد', tA:'المساعد', tT:'الأدوات', ph:'اسأل أي شيء…', send:'إرسال',
+  hi:'مرحباً! اسألني عن أدوات هذه الصفحة، أو افتح تبويب الأدوات لمساعدات الروابط وأدوات الذكاء الاصطناعي.',
+  m0:'مساعد دون اتصال. أضف عنوان Claude لتفعيل الذكاء الاصطناعي الكامل.', m1:'مدعوم بواسطة Claude',
+  ytH:'مساعد روابط YouTube', ttH:'منظّف روابط TikTok', aiH:'أدوات الذكاء الاصطناعي', paste:'الصق رابطاً', run:'تشغيل', copy:'نسخ', copied:'تم النسخ',
+  bad:'هذا الرابط غير صالح.', id:'معرّف الفيديو', clean:'رابط نظيف', embed:'كود التضمين', at:'البدء عند (ثوانٍ)',
+  note:'لا يتم توفير تنزيل الفيديوهات هنا: فهو يخالف شروط YouTube وTikTok وقد ينتهك حقوق صانعي المحتوى. استخدم وضع عدم الاتصال في YouTube Premium، أو خيار الحفظ في TikTok للفيديوهات التي يسمح أصحابها بذلك.',
+  noai:'الذكاء الاصطناعي غير متصل بعد. أضف عنوان Claude في ملف elias-addon.js لتفعيله.',
+  w:'كاتب المنشورات', s:'التلخيص', t:'الترجمة', i:'تحسين النص', yt:'YouTube', tk:'TikTok', to:'ترجمة إلى', inp:'نصك أو موضوعك',
+  wait:'جارٍ التفكير…', none:'لم أجد ذلك في هذه الصفحة. جرّب كلمات أخرى أو افتح تبويب الأدوات.', found:'هذا ما وجدته في هذه الصفحة:', show:'إظهار', err:'حدث خطأ. حاول مرة أخرى.', tC:'تحويل', cvH:'محوّل الملفات', f1:'Excel إلى PDF', f2:'PDF إلى Excel', f3:'PDF إلى Word', f4:'Word إلى PDF', go:'تحويل', dl:'تنزيل', busy:'جارٍ التحويل…', print:'فتحت نافذة الطباعة. اختر «حفظ بصيغة PDF».', done:'تم. ملفك جاهز.', scan:'لم يتم العثور على نص. ملفات PDF الممسوحة ضوئياً تحتاج إلى OCR.', cerr:'تعذر تحويل هذا الملف. تحقق من نوع الملف وحاول مجدداً.', cn:'تبقى الملفات على جهازك. تعمل تحويلات PDF مع الملفات التي تحتوي على نص حقيقي، وقد يختلف التنسيق والصور.', close:'إغلاق' }
+};
+const LN = { en:'English', fr:'French', ar:'Arabic' };
+let lang = (() => { try { return localStorage.getItem('elias_lang') } catch (e) {} })() || ({ fr:'fr', ar:'ar' }[(navigator.language || '').slice(0, 2)]) || 'en';
+const d = () => L[lang];
+const h = (t, p = {}, ...k) => { const e = document.createElement(t); for (const [a, v] of Object.entries(p)) a == 'class' ? e.className = v : a.startsWith('on') ? e[a] = v : e.setAttribute(a, v); e.append(...k); return e };
+
+/* ---------- Page translation: your dictionary first, then (if ENDPOINT is set) Claude translates anything else and caches it ---------- */
+const orig = new WeakMap(), SKIP = /^(SCRIPT|STYLE|TEXTAREA|CODE|PRE|NOSCRIPT)$/; let busy = false;
+const CACHE = {}; const cache = l => CACHE[l] || (CACHE[l] = (() => { try { return JSON.parse(localStorage.getItem('elias_tr_' + l)) || {} } catch (e) { return {} } })());
+function translatePage() {
+  const todo = new Set(), w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n;
+  while (n = w.nextNode()) {
+    const t = n.nodeValue.trim(); if (t.length < 2 || t.length > 90 || !/\p{L}/u.test(t) || SKIP.test(n.parentNode.nodeName)) continue;
+    let o = orig.get(n); if (o && t != o.en && t != o.tr) o = null;
+    if (!o) { o = { en: t, raw: n.nodeValue }; orig.set(n, o) }
+    if (lang == 'en') { n.nodeValue = o.raw; o.tr = null; continue }
+    const m = PAGE.find(p => p.en == o.en), tr = (m && m[lang]) || cache(lang)[o.en];
+    if (tr) { n.nodeValue = o.raw.replace(o.en, tr); o.tr = tr } else todo.add(o.en);
+  }
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(i => {
+    if (!i.dataset.eEn) { const m = PAGE.find(p => p.en == i.placeholder); if (!m) return; i.dataset.eEn = m.en }
+    const m = PAGE.find(p => p.en == i.dataset.eEn); i.placeholder = (lang != 'en' && m[lang]) || m.en;
+  });
+  document.documentElement.lang = lang;
+  if (CFG.RTL_PAGE) document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
+  if (lang != 'en' && todo.size && CFG.ENDPOINT && !busy) {
+    busy = true; const L0 = lang, arr = [...todo].slice(0, 60);
+    call(`Translate these website UI strings to ${LN[L0]}. Keep brand names, numbers and file extensions. Return ONLY a JSON array of strings, same length and order.`, [{ role: 'user', content: JSON.stringify(arr) }])
+      .then(o => { const r = JSON.parse(o.match(/\[[\s\S]*\]/)[0]); if (r.length == arr.length) { arr.forEach((k, i) => cache(L0)[k] = String(r[i])); try { localStorage.setItem('elias_tr_' + L0, JSON.stringify(cache(L0))) } catch (e) {} } })
+      .catch(() => {}).finally(() => { busy = false; if (lang == L0) translatePage() });
+  }
+}
+let tm; new MutationObserver(() => { clearTimeout(tm); tm = setTimeout(translatePage, 250) }).observe(document.body, { childList: true, subtree: true });
+
+/* ---------- AI call (through YOUR proxy) ---------- */
+async function call(system, messages) {
+  if (!CFG.ENDPOINT) throw 'noai';
+  const r = await fetch(CFG.ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system, messages }) });
+  const j = await r.json(); const o = j.text || (j.content || []).map(c => c.text || '').join(''); if (!o) throw 'err'; return o;
+}
+
+/* ---------- UI (Shadow DOM so it never touches your site's CSS) ---------- */
+const host = h('div', { id: 'elias-addon' }); document.body.append(host);
+const root = host.attachShadow({ mode: 'open' });
+root.innerHTML = `<style>
+:host{all:initial}*{box-sizing:border-box;font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
+.fab{position:fixed;right:16px;bottom:16px;z-index:2147483000;background:#ffd400;color:#111;border:0;border-radius:99px;padding:13px 18px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.p{position:fixed;right:16px;bottom:72px;z-index:2147483000;width:min(400px,calc(100vw - 32px));height:min(600px,78vh);background:#14161c;color:#f2f4f8;border:1px solid #2c3140;border-radius:14px;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5);font-size:15px;line-height:1.5}
+.p.on{display:flex}
+.hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #2c3140}.hd b{flex:1}
+.hd small{display:block;color:#9aa3b8;font-size:12px;font-weight:400}
+button{font:inherit;cursor:pointer}:focus-visible{outline:2px solid #ffd400;outline-offset:2px}
+.lg button,.tb button{background:none;border:1px solid #2c3140;color:#c5cbdb;border-radius:6px;padding:3px 9px;font-size:13px}
+.lg button[aria-pressed=true],.tb button[aria-pressed=true]{background:#ffd400;color:#111;border-color:#ffd400}
+.lg{display:flex;gap:4px}.tb{display:flex;gap:6px;padding:10px 14px 0}
+.bd{flex:1;overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
+.m{padding:9px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap}.m.u{background:#3a5bff;justify-self:end}.m.a{background:#1d212b;border:1px solid #2c3140}
+.btn{background:#ffd400;color:#111;border:0;border-radius:6px;padding:8px 14px;font-weight:700}.btn.g{background:none;color:#f2f4f8;border:1px solid #2c3140}
+.m .btn{display:block;margin-top:6px;padding:5px 10px;font-size:13px}
+form{display:flex;gap:8px;padding:12px;border-top:1px solid #2c3140}
+input,select,textarea{width:100%;background:#0d0f14;color:#f2f4f8;border:1px solid #2c3140;border-radius:6px;padding:9px;font-size:14px}
+form input{flex:1;min-width:0;width:auto}textarea{min-height:90px;resize:vertical}
+.card{border:1px solid #2c3140;border-radius:10px;padding:12px;display:grid;gap:8px}.card h3{font-size:15px;margin:0}
+.out{display:grid;gap:6px}.rw{background:#0d0f14;border:1px solid #2c3140;border-radius:6px;padding:8px;font-size:13px}
+.rw span{display:block;color:#9aa3b8;font-size:12px}.rw code{word-break:break-all;font-family:ui-monospace,Menlo,monospace}.rw button{margin-top:6px;padding:3px 9px;font-size:12px}
+.bad{color:#ff9b9b;margin:0}.note{color:#c5cbdb;font-size:13px;margin:0}
+.r{display:flex;gap:8px}
+</style>`;
+const fab = h('button', { class: 'fab', 'aria-expanded': 'false' }, 'AI');
+const panel = h('div', { class: 'p', role: 'dialog' });
+const title = h('b'), mode = h('small'), lg = h('div', { class: 'lg' }), x = h('button', { class: 'btn g', onclick: () => open(false) }, '✕');
+const tb = h('div', { class: 'tb' }), body = h('div', { class: 'bd', 'aria-live': 'polite' });
+const inp = h('input', { autocomplete: 'off' }), send = h('button', { class: 'btn' }), form = h('form', {}, inp, send);
+title.append(mode); panel.append(h('div', { class: 'hd' }, h('b', {}, title, mode), lg, x), tb, body, form); root.append(fab, panel);
+const hist = []; let tab = 'a', msgs = [];
+
+function open(on) { panel.classList.toggle('on', on); fab.setAttribute('aria-expanded', on); if (on && tab == 'a') inp.focus() }
+fab.onclick = () => open(!panel.classList.contains('on'));
+
+function chrome() {
+  const t = d(); panel.dir = lang == 'ar' ? 'rtl' : 'ltr';
+  title.firstChild.textContent = t.title; mode.textContent = CFG.ENDPOINT ? t.m1 : t.m0;
+  inp.placeholder = t.ph; send.textContent = t.send; x.setAttribute('aria-label', t.close);
+  lg.replaceChildren(...['en', 'fr', 'ar'].map(k => h('button', { 'aria-pressed': String(k == lang), onclick: () => setLang(k) }, { en: 'EN', fr: 'FR', ar: 'عربي' }[k])));
+  tb.replaceChildren(...[['a', t.tA], ['t', t.tT], ['c', t.tC]].map(([k, l]) => h('button', { 'aria-pressed': String(k == tab), onclick: () => { tab = k; chrome(); view() } }, l)));
+  form.style.display = tab == 'a' ? 'flex' : 'none';
+}
+function setLang(k) { lang = k; try { localStorage.setItem('elias_lang', k) } catch (e) {} translatePage(); chrome(); view() }
+function view() { body.replaceChildren(); tab == 'a' ? chatView() : tab == 't' ? toolsView() : convView() }
+
+/* ---------- Assistant ---------- */
+function say(r, t, btns = []) { const m = h('div', { class: 'm ' + r }, t); btns.forEach(b => m.append(b)); body.append(m); body.scrollTop = 1e9; return m }
+function chatView() { if (!msgs.length) msgs.push({ r: 'a', t: 'hi' }); msgs.forEach(m => say(m.r, m.k ? d()[m.k] : m.t, m.b || [])) }
+const pageItems = () => [...document.querySelectorAll('a,button,h1,h2,h3,h4,label,summary')].filter(e => e.offsetParent && e.textContent.trim().length > 1 && e.textContent.trim().length < 80);
+function flash(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); const o = el.style.outline; el.style.outline = '3px solid #ffd400'; setTimeout(() => el.style.outline = o, 2500) }
+function local(s) {
+  if (/youtube|tiktok|download|télécharg|telecharg|تحميل|تنزيل/i.test(s)) return { k: 'note' };
+  const w = s.toLowerCase().split(/[\s,.;:!?]+/).filter(v => v.length > 2); const seen = new Set(), hits = [];
+  pageItems().forEach(e => { const t = e.textContent.trim().replace(/\s+/g, ' '); if (seen.has(t)) return; if (w.some(v => t.toLowerCase().includes(v))) { seen.add(t); hits.push([t, e]) } });
+  return hits.length ? { t: d().found, b: hits.slice(0, 3).map(([t, e]) => h('button', { class: 'btn', onclick: () => flash(e) }, d().show + ': ' + t)) } : { k: 'none' };
+}
+form.onsubmit = async ev => {
+  ev.preventDefault(); const s = inp.value.trim(); if (!s) return; inp.value = '';
+  msgs.push({ r: 'u', t: s }); say('u', s); hist.push({ role: 'user', content: s });
+  const dots = say('a', d().wait); let out = null;
+  const sys = `You are the assistant of ELIAS Tools, a free browser-based toolbox (PDF, image, calculators, developer and security tools; files never leave the user's device). Reply in ${LN[lang]}, in 1 to 4 short plain-text sentences. Page items: ${[...new Set(pageItems().map(e => e.textContent.trim().replace(/\s+/g, ' ')))].slice(0, 40).join(' | ')}. Do not help download YouTube or TikTok videos; explain it breaks their terms and suggest official options.`;
+  if (CFG.ENDPOINT) { try { out = await call(sys, hist.slice(-10)) } catch (e) {} }
+  if (out) { dots.textContent = out; msgs.push({ r: 'a', t: out }); hist.push({ role: 'assistant', content: out }) }
+  else { const l = local(s); dots.remove(); const m = { r: 'a', k: l.k, t: l.t, b: l.b }; msgs.push(m); say('a', l.k ? d()[l.k] : l.t, l.b || []) }
+};
+
+/* ---------- Tools tab ---------- */
+const ytId = u => { try { const l = new URL(u.trim()); const m = l.pathname.match(/\/(?:shorts|embed|live)\/([\w-]{11})/); const id = l.hostname.includes('youtu.be') ? l.pathname.slice(1, 12) : l.searchParams.get('v') || (m && m[1]); return /^[\w-]{11}$/.test(id || '') ? id : null } catch (e) { return null } };
+const ttClean = u => { try { const l = new URL(u.trim()); return /(^|\.)tiktok\.com$/.test(l.hostname) ? l.origin + l.pathname : null } catch (e) { return null } };
+function rowOf(label, val) { const b = h('button', { class: 'btn g' }, d().copy); b.onclick = () => { navigator.clipboard.writeText(val); b.textContent = d().copied }; return h('div', { class: 'rw' }, h('span', {}, label), h('code', {}, val), b) }
+function toolsView() {
+  const t = d();
+  const yi = h('input', { placeholder: t.paste, dir: 'ltr' }), ys = h('input', { type: 'number', min: 0, placeholder: t.at }), yo = h('div', { class: 'out' });
+  const yr = h('button', { class: 'btn', onclick: () => { yo.replaceChildren(); const id = ytId(yi.value); if (!id) return yo.append(h('p', { class: 'bad' }, t.bad)); const s = Math.max(0, +ys.value || 0);
+    yo.append(rowOf(t.id, id), rowOf(t.clean, `https://www.youtube.com/watch?v=${id}${s ? '&t=' + s + 's' : ''}`), rowOf(t.embed, `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}${s ? '?start=' + s : ''}" title="YouTube video" allowfullscreen></iframe>`)) } }, t.run);
+  const ti = h('input', { placeholder: t.paste, dir: 'ltr' }), to = h('div', { class: 'out' });
+  const tr = h('button', { class: 'btn', onclick: () => { to.replaceChildren(); const c = ttClean(ti.value); to.append(c ? rowOf(t.clean, c) : h('p', { class: 'bad' }, t.bad)) } }, t.run);
+  const kind = h('select', {}, ...[['w', t.w], ['s', t.s], ['t', t.t], ['i', t.i]].map(([v, l]) => h('option', { value: v }, l)));
+  const opt = h('select', {}, ...[['YouTube', t.yt], ['TikTok', t.tk]].map(([v, l]) => h('option', { value: v }, l)));
+  const swap = () => { opt.replaceChildren(...(kind.value == 't' ? ['en', 'fr', 'ar'].map(k => h('option', { value: LN[k] }, LN[k])) : [['YouTube', t.yt], ['TikTok', t.tk]].map(([v, l]) => h('option', { value: v }, l)))); opt.style.display = kind.value == 'w' || kind.value == 't' ? '' : 'none' };
+  kind.onchange = swap; const ta = h('textarea', { placeholder: t.inp }), ao = h('div', { class: 'out' });
+  const ar = h('button', { class: 'btn', onclick: async () => {
+    const v = ta.value.trim(); if (!v) return; ao.replaceChildren(h('p', { class: 'note' }, t.wait));
+    const S = { w: `You write social media copy. For a ${opt.value} video, produce 3 catchy titles, one 2-sentence description and 8 relevant hashtags. Reply in ${LN[lang]}.`, s: `Summarize the text in 5 short bullet points. Reply in ${LN[lang]}.`, t: `Translate the text to ${opt.value}. Return only the translation.`, i: 'Improve clarity, grammar and tone while keeping the meaning. Return only the improved text, in the same language as the input.' }[kind.value];
+    try { const o = await call(S, [{ role: 'user', content: v }]); ao.replaceChildren(rowOf(t.run, o)) } catch (e) { ao.replaceChildren(h('p', { class: 'bad' }, e == 'noai' ? t.noai : t.err)) } } }, t.run);
+  swap();
+  body.append(
+    h('div', { class: 'card' }, h('h3', {}, t.ytH), yi, ys, yr, yo),
+    h('div', { class: 'card' }, h('h3', {}, t.ttH), ti, tr, to),
+    h('p', { class: 'note' }, t.note),
+    h('div', { class: 'card' }, h('h3', {}, t.aiH), kind, opt, ta, ar, ao));
+}
+
+/* ---------- File converter (runs 100% in the browser; libraries load from cdnjs on first use) ---------- */
+const LIB = { xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', mam: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js', pdfjs: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js' };
+const loaded = {}; const need = k => loaded[k] || (loaded[k] = new Promise((ok, no) => { const e = document.createElement('script'); e.src = LIB[k]; e.onload = ok; e.onerror = () => no('lib'); document.head.append(e) }));
+const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+async function pdfPages(buf) {
+  await need('pdfjs');
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) { const t = await (await fetch('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js')).text(); pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([t], { type: 'text/javascript' })) }
+  const doc = await pdfjsLib.getDocument({ data: buf }).promise, pages = [];
+  for (let i = 1; i <= doc.numPages; i++) {
+    const c = await (await doc.getPage(i)).getTextContent(), rows = [];
+    c.items.filter(t => t.str.trim()).forEach(t => { const y = Math.round(t.transform[5]); let r = rows.find(r => Math.abs(r.y - y) < 3); if (!r) rows.push(r = { y, c: [] }); r.c.push({ x: t.transform[4], s: t.str, w: t.width }) });
+    rows.sort((a, b) => b.y - a.y); rows.forEach(r => r.c.sort((a, b) => a.x - b.x)); pages.push(rows);
+  } return pages;
+}
+function grid(rows) {            // turn positioned text into spreadsheet columns
+  const cells = rows.map(r => { const o = []; r.c.forEach(t => { const l = o[o.length - 1]; if (l && t.x - l.e < 5) { l.s += (t.x - l.e > 1 ? ' ' : '') + t.s; l.e = t.x + t.w } else o.push({ x: t.x, e: t.x + t.w, s: t.s }) }); return o });
+  const xs = [...new Set(cells.flat().map(c => Math.round(c.x)))].sort((a, b) => a - b), cols = [];
+  xs.forEach(v => { if (!cols.length || v - cols[cols.length - 1] > 12) cols.push(v) });
+  return cells.map(r => { const g = Array(cols.length).fill(''); r.forEach(c => { let k = cols.length - 1; while (k > 0 && cols[k] > c.x + 12) k--; g[k] = g[k] ? g[k] + ' ' + c.s : c.s }); return g.map(v => /^-?\d+(\.\d+)?$/.test(v) ? +v : v) });
+}
+function printHtml(html, title) {  // browser "Save as PDF": keeps formatting and supports Arabic
+  const f = h('iframe', { style: 'position:fixed;width:0;height:0;border:0' }); document.body.append(f);
+  const w = f.contentWindow, dc = w.document; dc.open();
+  dc.write(`<!doctype html><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:12pt/1.5 system-ui,Arial,sans-serif;margin:18mm}table{border-collapse:collapse;width:100%;margin-bottom:12px}td,th{border:1px solid #999;padding:4px 6px;font-size:10pt}img{max-width:100%}</style>${html}`); dc.close();
+  setTimeout(() => { w.focus(); w.print(); setTimeout(() => f.remove(), 60000) }, 400);
+}
+function convView() {
+  const t = d(), acc = { x2p: '.xlsx,.xls,.csv', p2x: '.pdf', p2w: '.pdf', w2p: '.docx' };
+  const k = h('select', {}, ...[['x2p', t.f1], ['p2x', t.f2], ['p2w', t.f3], ['w2p', t.f4]].map(([v, l]) => h('option', { value: v }, l)));
+  const f = h('input', { type: 'file' }), s = h('p', { class: 'note' }), a = h('a', { class: 'btn', style: 'display:none;text-align:center;text-decoration:none' }, t.dl);
+  k.onchange = () => { f.accept = acc[k.value]; f.value = ''; a.style.display = 'none'; s.textContent = '' }; k.onchange();
+  const save = (blob, name) => { a.href = URL.createObjectURL(blob); a.download = name; a.style.display = 'block' };
+  const go = h('button', { class: 'btn', onclick: async () => {
+    const file = f.files[0]; if (!file) return; a.style.display = 'none'; s.className = 'note'; s.textContent = t.busy;
+    try {
+      const buf = await file.arrayBuffer(), base = file.name.replace(/\.[^.]+$/, ''), m = k.value;
+      if (m == 'x2p') { await need('xlsx'); const wb = XLSX.read(buf); printHtml(wb.SheetNames.map(n => `<h3>${esc(n)}</h3>` + XLSX.utils.sheet_to_html(wb.Sheets[n], { header: '', footer: '' })).join(''), base); s.textContent = t.print }
+      else if (m == 'w2p') { await need('mam'); printHtml((await mammoth.convertToHtml({ arrayBuffer: buf })).value, base); s.textContent = t.print }
+      else {
+        const pages = await pdfPages(buf); if (!pages.some(p => p.length)) throw 'scan';
+        if (m == 'p2x') { await need('xlsx'); const wb = XLSX.utils.book_new(); pages.forEach((p, i) => XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(grid(p)), 'Page ' + (i + 1))); save(new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/octet-stream' }), base + '.xlsx') }
+        else save(new Blob(['\ufeff<html xmlns:w="urn:schemas-microsoft-com:office:word"><meta charset="utf-8"><body>' + pages.map(p => p.map(r => `<p>${esc(r.c.map(c => c.s).join(' '))}</p>`).join('')).join('<br style="page-break-before:always">') + '</body></html>'], { type: 'application/msword' }), base + '.doc');
+        s.textContent = t.done;
+      }
+    } catch (e) { s.className = 'bad'; s.textContent = e == 'scan' ? t.scan : t.cerr }
+  } }, t.go);
+  body.append(h('div', { class: 'card' }, h('h3', {}, t.cvH), k, f, go, s, a), h('p', { class: 'note' }, t.cn));
+}
+
+chrome(); view(); translatePage();
+window.EliasAddon = { setLang, addStrings: a => { PAGE.push(...a); translatePage() } };
+})();
+
 $('#cf').onsubmit=e=>{e.preventDefault();const i=$('#ci');ask(i.value);i.value=''};
 $('#fab').onclick=()=>chat(!$('#ch').classList.contains('on'));$('#cx').onclick=()=>chat(false);$('#askTop').onclick=()=>chat(true);
 $('#mode').textContent=ENDPOINT?'Powered by Claude':'Offline helper. Add your Claude endpoint to enable full AI.';
